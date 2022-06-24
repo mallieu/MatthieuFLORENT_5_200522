@@ -6,42 +6,42 @@ const getProducts = function() {
 		.then((result) => result.json())
 
 		.then((data) => {
-			console.log(data)
+      console.log(data)
 			let html = ""; // creation d'une variable html de type string
 			if (window.location.href.indexOf("id") > -1) {
-				html = ficheProduit(data, html);
-			} else {
-				html = importPageAccueil(data, html);
+         html = ficheProduit(data, html);
+				} 
+        else {
+          html = importPageAccueil(data, html);
 			}
 			sectionArticle.innerHTML = html; // insertion de la variable html;
-		})
-		.catch((err) => {
+    })
+      .catch((err) => {
 			console.error(err);
-		});
-};
-
+    });
+  };
+ 
 // Appel de la fonction d'affichage des produits
 getProducts();
 
 function importPageAccueil(data, html) {
-	for (let kanap of data) {
-		html += ` <a href="./product.html?id=${kanap._id}">
+  for (let kanap of data) {
+    html += ` <a href="./product.html?id=${kanap._id}">
               <article>
                 <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
                 <h3 class="productName">${kanap.name}</h3>
                 <p class="productDescription">${kanap.description}.</p>
               </article>
             </a> `;
-	}
-	return html;
+  }
+  return html;
 }
 
 function ficheProduit(data, html) {
-	let urlParams = new URLSearchParams(window.location.search);
-  /* sectionArticle = document.getElementsByClassName("item")[0].innerHTML */ // La sélection ne fonctionne pas
-	for (let kanap of data) {
-		if (kanap._id == urlParams.get('id')) {
-			html += ` <article>
+  let urlParams = new URLSearchParams(window.location.search);
+  for (let kanap of data) {
+    if (kanap._id == urlParams.get('id')) {
+    html += ` <article>
 <div class="item__img">
   <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
 </div>
@@ -80,7 +80,16 @@ function ficheProduit(data, html) {
 </div>
 </article>
 </section>  `;
-			return html;
-		}
-	};
-}
+return html;
+    }};}
+
+
+
+
+
+
+
+/*   let urlParams = new URLSearchParams(window.location.search);
+    let monProduit = data.filter(function () {
+      return kanap._id == urlParams.get('id');
+    };} */
