@@ -1,5 +1,5 @@
 
-import function ficheProduit(data, html) {
+function ficheProduit(data, html) {
 	let urlParams = new URLSearchParams(window.location.search);
   
 	async function sectionCouleurs(html, kanap) {
@@ -55,3 +55,5 @@ import function ficheProduit(data, html) {
 		}
 	}
 }
+
+export {ficheProduit}

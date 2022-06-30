@@ -1,16 +1,24 @@
-let sectionArticle = document.getElementById("items"); // Accès à la section Items (accueil)
-// Creation de la fonction d'afichage des produits
+const urlAPI = "http://localhost:3000/api/products" // URL de l'API 
+let sectionArticle = "" // Déclaration de la section HTML qui accueillera les données
+
+// Appel de l'API pour la génération des produits
 const getProducts = function() {
-	fetch("http://localhost:3000/api/products") // Appel de l'API
+	fetch(urlAPI) // Appel de l'API
 		.then((result) => result.json()).then((data) => {
 			console.log(data)
-			let html = ""; // creation d'une variable html de type string
+			let html = ""; // Création d'une variable HTML de type string
+
+      // Génération des produits selon le type de page (Les fonctions sont sur des fichiers distincts)
 			if (window.location.href.indexOf("id") > -1) {
-				html = ficheProduit(data, html);
+        sectionArticle = document.getElementById("items"); // Accès à la section Items (accueil)
+				html = ficheProduit(data, html);  // Fiche Produit 
 			} else {
-				html = importPageAccueil(data, html);
+        sectionArticle = document.getElementsByClassName("item")[0].innerHTML; // Accès à la section Items (accueil)
+				html = importPageAccueil(data, html);  // Page accueil 
 			}
-			sectionArticle.innerHTML = html; // insertion de la variable html;
+
+      // Insertion des produits la variable HTML. Le sélecteur est commun aux deux fonctions mais change selon les cas.
+			sectionArticle.innerHTML = html; 
 		}).catch((err) => {
 			console.error(err);
 		});
@@ -18,6 +26,8 @@ const getProducts = function() {
 // Appel de la fonction d'affichage des produits
 getProducts();
 
+
+// Création d'un bloc HTML complet par canapé dans l'API
 function importPageAccueil(data, html) {
 	for (let kanap of data) {
 		html += ` <a href="./product.html?id=${kanap._id}">
@@ -31,20 +41,32 @@ function importPageAccueil(data, html) {
 	return html;
 }
 
+// Création d'un bloc HTML complet du canapé selon son ID
 function ficheProduit(data, html) {
-	let urlParams = new URLSearchParams(window.location.search);
-  
+
+  // Récupère l'id depuis l'URL
+	const urlParams = new URLSearchParams(window.location.search);
+
+  // Fonction qui ajoute les variants "Colors"
+  /* Elle dépend de la génération de la fiche produit en amont, 
+  car elle a besoin que le html soit effectivement sur la page */
 	async function sectionCouleurs(html, kanap) {
 		await ficheProduit(html, kanap)
 		let addColors = document.getElementById("colors");
+
+    // Récupère la couleur à partir du canapé généré par l'API
 		kanap.colors.forEach(kanapColor => html += ` 
-         
           <option value="${kanapColor}">${kanapColor}</option>`);
 		addColors.innerHTML = html; // insertion de la variable html;
 	}
 	/* sectionArticle = document.getElementsByClassName("item")[0].innerHTML */ // La sélection ne fonctionne pas
-	for (let kanap of data) {
-		if (kanap._id == urlParams.get('id')) {
+	
+  
+  // Permet la recherche du canapé selon son ID
+  for (let kanap of data) {
+		if (kanap._id === urlParams.get('id')) {
+
+      // Génération de la fiche produit avec les données d'un kanap
 			html += `
   <article>
     <div class="item__img">
@@ -82,7 +104,7 @@ function ficheProduit(data, html) {
     </div>
   </article>
 </section>`;
-			sectionCouleurs(html, kanap);
+			sectionCouleurs(html, kanap); // Appel à la fonction qui récupère les couleurs
 			return html;
 		}
 	}
