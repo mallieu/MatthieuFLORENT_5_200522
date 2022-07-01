@@ -44,6 +44,7 @@ function ficheProduit(data, html) {
   </article>`;
             // Appel à la fonction qui récupère les couleurs
             sectionCouleurs(html, kanap);
+            produitActuel = kanap;
             return html;
         }
     }
@@ -61,3 +62,5 @@ function ficheProduit(data, html) {
 }
 
 export { ficheProduit };
+
+export let produitActuel;

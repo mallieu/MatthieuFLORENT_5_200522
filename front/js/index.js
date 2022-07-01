@@ -1,3 +1,9 @@
+import { importPageAccueil } from "./page_accueil.js";
+
+import { ficheProduit } from "./product.js";
+
+import { produitActuel } from "./product.js";
+
 // URL de l'API
 const urlAPI = "http://localhost:3000/api/products";
 
@@ -19,17 +25,17 @@ const getProducts = function() {
             // Fiche Produit
             if (window.location.href.indexOf("id") > -1) {
                 // Paramétrage de la section
-                sectionArticle = document.getElementsByClassName("item")[0].innerHTML;
+                sectionArticle = document.getElementsByClassName("item")[0];
                 html = ficheProduit(data, html);
-            
+
             // Page accueil
             } else {
                 // Paramétrage de la section
                 sectionArticle = document.getElementById("items");
                 html = importPageAccueil(data, html);
             }
-            // Insertion des produits la variable HTML. 
-            //Le sélecteur est commun aux deux fonctions mais change selon les cas.
+            // Insertion des produits avec la variable HTML. 
+            // N.B.Le sélecteur est commun aux deux fonctions mais change selon les cas.
             sectionArticle.innerHTML = html;
         }).catch((err) => {
             console.error(err);
@@ -37,7 +43,3 @@ const getProducts = function() {
 };
 // Appel de la fonction d'affichage des produits
 getProducts();
-
-import { importPageAccueil } from "./page_accueil.js";
-
-import { ficheProduit } from "./product.js";
