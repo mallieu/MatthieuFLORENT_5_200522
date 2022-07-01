@@ -21,8 +21,3 @@ function creationProduit(quantity, id, color) {
     };
 
 };
-
-
-
-
-let produitActif = 

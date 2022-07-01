@@ -1,3 +1,5 @@
+let produitActuel = []; // Variable utilisée pour extraire le canapé 
+
 // Création d'un bloc HTML complet du canapé selon son ID
 function ficheProduit(data, html) {
     // Récupère l'id depuis l'URL
@@ -6,6 +8,12 @@ function ficheProduit(data, html) {
     // Permet la recherche du canapé selon son ID
     for (let kanap of data) {
         if (kanap._id === urlParams.get("id")) {
+          /* A COMPLETER let kanape = {
+            id : '',
+            price : "",
+            name : "",
+          }; */ 
+          
             // Génération de la fiche produit avec les données d'un kanap
             html += `
   <article>
@@ -44,7 +52,7 @@ function ficheProduit(data, html) {
   </article>`;
             // Appel à la fonction qui récupère les couleurs
             sectionCouleurs(html, kanap);
-            produitActuel = kanap;
+            // Remplacer par LocalStorage
             return html;
         }
     }
@@ -57,10 +65,9 @@ function ficheProduit(data, html) {
       // Récupère la couleur à partir du canapé généré par l'API
       kanap.colors.forEach(kanapColor => html += ` 
         <option value="${kanapColor}">${kanapColor}</option>`);
-      addColors.innerHTML = html; // insertion de la variable html;
+      addColors.innerHTML = html; // Insertion HTML pour chaque couleur;
   }
 }
 
-export { ficheProduit };
 
-export let produitActuel;
+export { ficheProduit, produitActuel };

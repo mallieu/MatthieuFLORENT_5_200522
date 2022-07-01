@@ -1,8 +1,5 @@
-import { importPageAccueil } from "./page_accueil.js";
-
-import { ficheProduit } from "./product.js";
-
-import { produitActuel } from "./product.js";
+import { importPageAccueil } from "./page_accueil.js"; // Affichage produit page accueil
+import { ficheProduit } from "./product.js"; // Affichage fiche produit
 
 // URL de l'API
 const urlAPI = "http://localhost:3000/api/products";
@@ -41,5 +38,5 @@ const getProducts = function() {
             console.error(err);
         });
 };
-// Appel de la fonction d'affichage des produits
-getProducts();
+
+export { getProducts }
