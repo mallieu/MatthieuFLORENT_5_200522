@@ -2,6 +2,4 @@
 import { getProducts } from "./modules/api.js" 
 getProducts();
 
-// Mise en route des déclencheurs
-import { eventsListeners } from "./modules/cart.js";
-eventsListeners()
+localStorage => localStorage

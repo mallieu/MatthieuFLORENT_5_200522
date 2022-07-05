@@ -1,5 +1,9 @@
-import { importPageAccueil } from "./page_accueil.js"; // Affichage produit page accueil
-import { ficheProduit } from "./product.js"; // Affichage fiche produit
+import { 
+    importPageAccueil // Affichage produit page accueil
+} from "./page_accueil.js"; 
+import { 
+    ficheProduit, // Affichage fiche produit
+} from "./product.js"; 
 
 // URL de l'API
 const urlAPI = "http://localhost:3000/api/products";
@@ -13,7 +17,6 @@ const getProducts = function() {
     // Appel de l'API
     fetch(urlAPI)
         .then((result) => result.json()).then((data) => {
-            console.log(data);
             let html = ""; // Création d'une variable HTML de type string
 
             // Génération des produits selon le type de page
@@ -33,10 +36,14 @@ const getProducts = function() {
             }
             // Insertion des produits avec la variable HTML. 
             // N.B.Le sélecteur est commun aux deux fonctions mais change selon les cas.
-            sectionArticle.innerHTML = html;
+            insertionHTML(html)
         }).catch((err) => {
             console.error(err);
         });
 };
 
-export { getProducts }
+async function insertionHTML(html) {
+    sectionArticle.innerHTML = html;
+}   
+
+export { getProducts, insertionHTML }

@@ -1,6 +1,20 @@
-import { produitActuel } from "./product.js";
+// import { produitActuel } from "./product.js";
 
-// LE PANIER
+// class ProduitPanier {
+//     constructor(imageUrl, altTxt, name, price, description, colors) {
+//     this.imageUrl = imageUrl;
+//     this.altTxt = altTxt;
+//     this.price = price;
+//     this.name = name;
+//     this.description = description;
+//     this.colors = colors;
+//     }   
+// }
+
+// export { ProduitPanier }
+
+
+/*/ LE PANIER
 let panier = [];
 
 function eventsListeners() {
@@ -8,9 +22,9 @@ function eventsListeners() {
     addToCart = document.getElementById("addToCart");
     addToCart.addEventListener("click", ajoutPanier);
     function ajoutPanier() {
-        console.log(produitActuel);
+        console.log("Prout");
     };
-};
+}; */
 
 
 
@@ -22,14 +36,7 @@ newAccount.showBalance(); // imprime "Solde: 500 EUR" à la console
 
 
 /*
-class produitPanier {
-    constructor(imageUrl, altTxt, name, price, description, colors) {
-    this.imageUrl = imageUrl;
-    this.altTxt = altTxt;
-    this.name = name;
-    this.description = description;
-    this.colors = colors;
-}    
+ 
 ajoutPanier() {
     console.log("+1")
 };
@@ -97,4 +104,4 @@ let gestionPanier = function () {
 }
 */
 
-export { eventsListeners }
+
