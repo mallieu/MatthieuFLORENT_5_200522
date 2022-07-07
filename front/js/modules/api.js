@@ -3,6 +3,7 @@ import {
 } from "./page_accueil.js"; 
 import { 
     ficheProduit, // Affichage fiche produit
+    eventsListeners // Activation déclencheurs
 } from "./product.js"; 
 
 // URL de l'API
@@ -12,7 +13,7 @@ const urlAPI = "http://localhost:3000/api/products";
 let sectionArticle = "";
 
 // Appel des données pour la génération des produits
-const getProducts = function() {
+const getProducts = async function() {
 
     // Appel de l'API
     fetch(urlAPI)
@@ -44,6 +45,7 @@ const getProducts = function() {
 
 async function insertionHTML(html) {
     sectionArticle.innerHTML = html;
+    eventsListeners()
 }   
 
 export { getProducts, insertionHTML }

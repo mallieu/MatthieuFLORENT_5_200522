@@ -2,16 +2,18 @@ import {
   insertionHTML
 } from "./api.js"
 
-let storageKanap;
+let storageKanap = {};
+
+const urlParams = new URLSearchParams(window.location.search);  // Recherche de l'ID dans l'URL
+
 
 // Création d'un bloc HTML complet du canapé selon son ID
 function ficheProduit(data, html) {
-  storageKanap = data; // Enregistrement des données de l'API
-  const urlParams = new URLSearchParams(window.location.search); 
+  storageKanap = data;   // Enregistrement des données de l'API
 
   // Création des items Kanap à partir de data
   for (const kanap of data) {
-      Object.entries(kanap).forEach(kanap => kanap);
+      Object.entries(kanap).forEach(kanap =>  kanap);
       // Génération du produit selon son ID
       if (kanap._id === urlParams.get("id")) {
           html = generationFiche(html, kanap); // Création du bloc
@@ -22,8 +24,9 @@ function ficheProduit(data, html) {
   }
 }
 
-function generationFiche(html, kanap) {
 
+
+function generationFiche(html, kanap) {
 // Pour faciliter la génération et la manipulation du produit
 // on insère directement les variables correspondantes
   html += `
@@ -75,6 +78,30 @@ async function sectionCouleurs(html, kanap) {
         <option value="${kanapColor}">${kanapColor}</option>`);
   addColors.innerHTML = html; // Insertion HTML pour chaque couleur;
 }
+
+async function eventsListeners() {
+  // Ajout panier
+  const addToCart = document.querySelector("#addToCart");
+  addToCart.addEventListener("click", ajoutPanier);
+
+
+  function ajoutPanier() {
+    // Récupération des attributs
+    const selectedQuantity = document.getElementById("quantity").value;    // Quantité
+    const selectedColor = document.querySelector("#colors").value;    // Couleur 
+    const produitActuel = storageKanap.filter(produitActuel => produitActuel._id === urlParams.get("id"));
+    console.log(produitActuel[0]._id)
+
+    console.log(selectedQuantity)
+    console.log(selectedColor)
+
+    // ID PRODUIT
+  };
+};
+
+
 export {
   ficheProduit,
+  eventsListeners,
+  storageKanap
 };

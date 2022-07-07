@@ -17,14 +17,7 @@
 /*/ LE PANIER
 let panier = [];
 
-function eventsListeners() {
-    // Ajout panier
-    addToCart = document.getElementById("addToCart");
-    addToCart.addEventListener("click", ajoutPanier);
-    function ajoutPanier() {
-        console.log("Prout");
-    };
-}; */
+ */
 
 
 
