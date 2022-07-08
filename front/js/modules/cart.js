@@ -1,72 +1,75 @@
-import { storageKanap, urlParams } from "./product.js";
+import {
+	storageKanap,
+	urlParams
+} from "./product.js";
 
 async function eventsListeners() {
-    // Ajout panier
-    const addToCart = document.querySelector("#addToCart");
-    addToCart.addEventListener("click", ajoutPanier);
-  };
+	// Ajout panier
+	const addToCart = document.querySelector("#addToCart");
+	addToCart.addEventListener("click", ajoutPanier);
+}
 
 function ajoutPanier() {
-    // Récupération des attributs
-    const produitActuel = storageKanap.filter(produitActuel => produitActuel._id === urlParams.get("id"));
-    const selectedQuantity = document.getElementById("quantity").value;    // Quantité
-    const selectedColor = document.querySelector("#colors").value;    // Couleur 
-    const produit = new ProduitPanier (produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor)
+	// Récupération des attributs
+	const produitActuel = storageKanap.filter((produitActuel) => produitActuel._id === urlParams.get("id"));
+	const selectedQuantity = document.getElementById("quantity").value; 
+	const selectedColor = document.querySelector("#colors").value;  
 
-    // Alerte si absence de quantité
-    // if (selectedQuantity == 0) {
-    //   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1")
-    // }
-    // Recherche dans le tableau panier
-      if (panier.find(produitActuel => produitActuel._id == produit._id)){
-        produit.ajoutQuantity(produit, selectedQuantity)
-      }
-      else { 
-      produit.quantity = selectedQuantity    
-      console.log(produit.quantity)
-      produit.ajoutProduit();
-  }
-  console.log(panier)
+  // Création du produit
+	const produit = new ProduitPanier(produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor);
+	
+  // Alerte si absence de quantité
+	// if (selectedQuantity == 0) {
+	//   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1")
+	// }
+
+	// Recherche dans le tableau panier
+	if (panier.find((produitActuel) => produitActuel._id == produit._id) && panier.find((produitActuel) => produitActuel.color == produit.color)) {
+		produit.ajoutQuantity(produit, selectedQuantity);
+	} else {
+		produit.quantity = selectedQuantity;
+		console.log(produit.quantity);
+		produit.ajoutProduit();
+	}
+	console.log(panier);
+}
+
+const panier = [];
+
+class ProduitPanier {
+	constructor(_id, imageUrl, altTxt, name, price, description, color) {
+		this._id = _id;
+		this.imageUrl = imageUrl;
+		this.altTxt = altTxt;
+		this.price = price;
+		this.name = name;
+		this.description = description;
+		this.color = color;
+		this.quantity = 0;
+	}
+	ajoutProduit() {
+		panier.push(this);
+	}
+	ajoutQuantity(produit, selectedQuantity) {
+		console.log("Quantité page : " + selectedQuantity);
+		console.log("Quantité produit dans panier : " + produit.quantity);
+		produit.quantity = produit.quantity + +selectedQuantity; // Calcul pas bon
+		console.log(panier);
+
+	}
+	enleverProduit() {
+		panier.pop(this);
+	}
+}
+
+export {
+	eventsListeners
 };
-  
-  const panier = []
-  
-  class ProduitPanier {
-      constructor(_id, imageUrl, altTxt, name, price, description, color) {
-      this._id = _id;  
-      this.imageUrl = imageUrl;
-      this.altTxt = altTxt;
-      this.price = price;
-      this.name = name;
-      this.description = description;
-      this.color = color;
-      this.quantity = 0;
-      }   
-      ajoutProduit() {
-        panier.push(this)
-      }
-      ajoutQuantity(produit, selectedQuantity) {
-        console.log("Quantité page : " + selectedQuantity)
-        console.log("Quantité produit : " + produit.quantity)
-        produit.quantity = +produit.quantity + +selectedQuantity; // Calcul pas bon
-        console.log("Quantité finale : " + produit.quantity)
-
-      }
-      enleverProduit () {
-        panier.pop(this)
-      }
-  }
-  
-
-export { eventsListeners }
-
 
 /*/ LE PANIER
 let panier = [];
 
  */
-
-
 
 /*
 const newAccount = new BankAccount("Will Alexander", 500);
@@ -143,5 +146,3 @@ let gestionPanier = function () {
 
 }
 */
-
-
