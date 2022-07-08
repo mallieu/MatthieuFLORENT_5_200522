@@ -3,8 +3,11 @@ import {
 } from "./page_accueil.js"; 
 import { 
     ficheProduit, // Affichage fiche produit
-    eventsListeners // Activation déclencheurs
 } from "./product.js"; 
+
+import {
+    eventsListeners // Activation déclencheurs
+} from "./cart.js"
 
 // URL de l'API
 const urlAPI = "http://localhost:3000/api/products";

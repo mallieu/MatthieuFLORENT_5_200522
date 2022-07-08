@@ -6,7 +6,6 @@ let storageKanap = {};
 
 const urlParams = new URLSearchParams(window.location.search);  // Recherche de l'ID dans l'URL
 
-
 // Création d'un bloc HTML complet du canapé selon son ID
 function ficheProduit(data, html) {
   storageKanap = data;   // Enregistrement des données de l'API
@@ -23,8 +22,6 @@ function ficheProduit(data, html) {
       }
   }
 }
-
-
 
 function generationFiche(html, kanap) {
 // Pour faciliter la génération et la manipulation du produit
@@ -72,36 +69,14 @@ function generationFiche(html, kanap) {
 car elle a besoin que le html soit effectivement sur la page */
 async function sectionCouleurs(html, kanap) {
   await insertionHTML(html);
-  const addColors = document.querySelector("#colors");
   // Récupère la couleur à partir du canapé généré par l'API
   kanap.colors.forEach(kanapColor => html += ` 
-        <option value="${kanapColor}">${kanapColor}</option>`);
-  addColors.innerHTML = html; // Insertion HTML pour chaque couleur;
+  <option value="${kanapColor}">${kanapColor}</option>`);
+  document.querySelector("#colors").innerHTML = html; // Insertion HTML pour chaque couleur;
 }
-
-async function eventsListeners() {
-  // Ajout panier
-  const addToCart = document.querySelector("#addToCart");
-  addToCart.addEventListener("click", ajoutPanier);
-
-
-  function ajoutPanier() {
-    // Récupération des attributs
-    const selectedQuantity = document.getElementById("quantity").value;    // Quantité
-    const selectedColor = document.querySelector("#colors").value;    // Couleur 
-    const produitActuel = storageKanap.filter(produitActuel => produitActuel._id === urlParams.get("id"));
-    console.log(produitActuel[0]._id)
-
-    console.log(selectedQuantity)
-    console.log(selectedColor)
-
-    // ID PRODUIT
-  };
-};
-
 
 export {
   ficheProduit,
-  eventsListeners,
+  urlParams,
   storageKanap
 };

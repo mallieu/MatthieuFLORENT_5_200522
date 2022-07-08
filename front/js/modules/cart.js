@@ -1,17 +1,64 @@
-// import { produitActuel } from "./product.js";
+import { storageKanap, urlParams } from "./product.js";
 
-// class ProduitPanier {
-//     constructor(imageUrl, altTxt, name, price, description, colors) {
-//     this.imageUrl = imageUrl;
-//     this.altTxt = altTxt;
-//     this.price = price;
-//     this.name = name;
-//     this.description = description;
-//     this.colors = colors;
-//     }   
-// }
+async function eventsListeners() {
+    // Ajout panier
+    const addToCart = document.querySelector("#addToCart");
+    addToCart.addEventListener("click", ajoutPanier);
+  };
 
-// export { ProduitPanier }
+function ajoutPanier() {
+    // Récupération des attributs
+    const produitActuel = storageKanap.filter(produitActuel => produitActuel._id === urlParams.get("id"));
+    const selectedQuantity = document.getElementById("quantity").value;    // Quantité
+    const selectedColor = document.querySelector("#colors").value;    // Couleur 
+    const produit = new ProduitPanier (produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor)
+
+    // Alerte si absence de quantité
+    // if (selectedQuantity == 0) {
+    //   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1")
+    // }
+    // Recherche dans le tableau panier
+      if (panier.find(produitActuel => produitActuel._id == produit._id)){
+        produit.ajoutQuantity(produit, selectedQuantity)
+      }
+      else { 
+      produit.quantity = selectedQuantity    
+      console.log(produit.quantity)
+      produit.ajoutProduit();
+  }
+  console.log(panier)
+};
+  
+  const panier = []
+  
+  class ProduitPanier {
+      constructor(_id, imageUrl, altTxt, name, price, description, color) {
+      this._id = _id;  
+      this.imageUrl = imageUrl;
+      this.altTxt = altTxt;
+      this.price = price;
+      this.name = name;
+      this.description = description;
+      this.color = color;
+      this.quantity = 0;
+      }   
+      ajoutProduit() {
+        panier.push(this)
+      }
+      ajoutQuantity(produit, selectedQuantity) {
+        console.log("Quantité page : " + selectedQuantity)
+        console.log("Quantité produit : " + produit.quantity)
+        produit.quantity = +produit.quantity + +selectedQuantity; // Calcul pas bon
+        console.log("Quantité finale : " + produit.quantity)
+
+      }
+      enleverProduit () {
+        panier.pop(this)
+      }
+  }
+  
+
+export { eventsListeners }
 
 
 /*/ LE PANIER
