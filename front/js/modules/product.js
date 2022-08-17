@@ -12,7 +12,7 @@ function ficheProduit(data, html) {
 
   // Création des items Kanap à partir de data
   for (const kanap of data) {
-      Object.entries(kanap).forEach(kanap =>  kanap);
+      Object.entries(kanap).forEach(kanap => kanap);
       // Génération du produit selon son ID
       if (kanap._id === urlParams.get("id")) {
           html = generationFiche(html, kanap); // Création du bloc

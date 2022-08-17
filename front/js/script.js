@@ -6,3 +6,7 @@ localStorage => localStorage
 
 // Appel des données des Kanap
 import { storageKanap } from "./modules/product.js"
+
+
+
+    

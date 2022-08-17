@@ -17,32 +17,27 @@ function ajoutPanier() {
 	const selectedQuantity = Number(document.getElementById("quantity").value); 
 	const selectedColor = document.querySelector("#colors").value;  
 
+    // Création du produit
+	const produit = new ProduitPanier(produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor);
+	produit['quantity'] = selectedQuantity;
+    
     // Alerte si absence de quantité
 	// if (selectedQuantity == 0) {
 	//   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1")
 	// }
-	if (typeof produit !== 'undefined') {
-	// Création du produit
-	const produit = new ProduitPanier(produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor);
+
+	// Recherche dans le tableau panier
+	if (panier.find((produitActuel) => produitActuel._id == produit._id) && panier.find((produitActuel) => produitActuel.color == produit.color)) {
+		produit.ajoutQuantity(selectedQuantity);
 		console.log(produit)
+	} else {
+		produit.quantity = selectedQuantity;
+		produit.ajoutProduit();
+		console.log(produit)
+	}
+	console.log(panier)
+}
 
-
-		// Recherche dans le tableau panier
-	} else if ((panier.find((produitActuel) => produitActuel._id == produit._id) && panier.find((produitActuel) => produitActuel.color == produit.color))) {
-			// Modification de la quantité
-			produit.ajoutQuantity(selectedQuantity);
-			console.log(produit)
-		} 	else {
-			
-			// Ajout de la quantité
-			produit['quantity'] = selectedQuantity;
-			
-			// Ajout du produit au panier
-			produit.ajoutProduit(produit);
-			console.log(produit)
-		}
-}	
-	
 
 class ProduitPanier {
 	constructor(_id, imageUrl, altTxt, name, price, description, color, quantity) {
@@ -61,9 +56,9 @@ class ProduitPanier {
 		panier.pop(this);
 	}
 	ajoutQuantity(selectedQuantity) {
-	console.log("Quantité avant : " + this.quantity)
-	this.quantity += 1111;
-	console.log("Quantité ajoutée : " + this.quantity)
+	console.log(selectedQuantity)
+	this.quantity += 10;
+	console.log(this.quantity)
 	}
 }
 
