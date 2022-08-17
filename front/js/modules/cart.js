@@ -8,44 +8,32 @@ const panier = [];
 async function eventsListeners() {
 	// Ajout panier
 	const addToCart = document.querySelector("#addToCart");
-	addToCart.addEventListener("click", ajoutPanier);
+	addToCart.addEventListener("click", ajoutProduit);
 }
 
-function ajoutPanier() {
+function ajoutProduit() {
 	// Récupération des attributs
 	const produitActuel = storageKanap.filter((produitActuel) => produitActuel._id === urlParams.get("id"));
 	const selectedQuantity = Number(document.getElementById("quantity").value); 
 	const selectedColor = document.querySelector("#colors").value;  
 
-    // Alerte si absence de quantité
+    // Création du produit
+	// if (typeof produit === "undefined") { TEST A REVOIR
+	const produit = new ProduitPanier(produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor);
+	produit.traitementProduit(produit, selectedQuantity)    
+	
+	// Alerte si absence de quantité
 	// if (selectedQuantity == 0) {
 	//   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1")
 	// }
-	if (typeof produit !== 'undefined') {
-	// Création du produit
-	const produit = new ProduitPanier(produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor);
-		console.log(produit)
 
+	// Recherche dans le tableau panier
+	console.log(panier)
+}
 
-		// Recherche dans le tableau panier
-	} else if ((panier.find((produitActuel) => produitActuel._id == produit._id) && panier.find((produitActuel) => produitActuel.color == produit.color))) {
-			// Modification de la quantité
-			produit.ajoutQuantity(selectedQuantity);
-			console.log(produit)
-		} 	else {
-			
-			// Ajout de la quantité
-			produit['quantity'] = selectedQuantity;
-			
-			// Ajout du produit au panier
-			produit.ajoutProduit(produit);
-			console.log(produit)
-		}
-}	
-	
 
 class ProduitPanier {
-	constructor(_id, imageUrl, altTxt, name, price, description, color, quantity) {
+	constructor(_id, imageUrl, altTxt, name, price, description, color) {
 		this._id = _id;
 		this.imageUrl = imageUrl;
 		this.altTxt = altTxt;
@@ -54,17 +42,30 @@ class ProduitPanier {
 		this.description = description;
 		this.color = color;
 	}
-	ajoutProduit() {
+	ajoutPanier() {
 		panier.push(this);
 	}
-	enleverProduit() {
+	enleverPanier() {
 		panier.pop(this);
 	}
-	ajoutQuantity(selectedQuantity) {
-	console.log("Quantité avant : " + this.quantity)
-	this.quantity += 1111;
-	console.log("Quantité ajoutée : " + this.quantity)
+	traitementProduit(produit, selectedQuantity) {
+		if (panier.find((produitActuel) => produitActuel._id === produit._id) && panier.find((produitActuel) => produitActuel.color === produit.color)) {
+			console.log("bis repetita")
+			console.log("Quantité avant ajout : " + produit.quantity)
+			produit['quantity'] = selectedQuantity + 2;
+			console.log("Quantité après ajout : " + produit.quantity)
+		} else {
+			produit['quantity'] = selectedQuantity;
+			console.log("premiere fois")
+			console.log("Quantité après ajout : " + produit.quantity)
+			produit.ajoutPanier(produit);
+		}
+	
 	}
+	// ajoutQuantity(selectedQuantity) {
+	// this.quantity += selectedQuantity;
+	// console.log("Quantité après ajout : " + this.quantity)
+	// }
 }
 
 export {

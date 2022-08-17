@@ -1,72 +1,76 @@
 import {
-	storageKanap,
-	urlParams
+    storageKanap,
+    urlParams
 } from "./product.js";
 
 const panier = [];
 
 async function eventsListeners() {
-	// Ajout panier
-	const addToCart = document.querySelector("#addToCart");
-	addToCart.addEventListener("click", ajoutPanier);
+    // Ajout panier
+    const addToCart = document.querySelector("#addToCart");
+    addToCart.addEventListener("click", ajoutPanier);
 }
 
-function ajoutPanier() {
-	// Récupération des attributs
-	const produitActuel = storageKanap.filter((produitActuel) => produitActuel._id === urlParams.get("id"));
-	const selectedQuantity = Number(document.getElementById("quantity").value); 
-	const selectedColor = document.querySelector("#colors").value;  
+async function ajoutPanier() {
+    await eventsListeners();
+    // Récupération des attributs
+    const produitActuel = storageKanap.filter((produitActuel) => produitActuel._id === urlParams.get("id"));
+    const selectedQuantity = Number(document.getElementById("quantity").value);
+    const selectedColor = document.querySelector("#colors").value;
+    let produit;
 
-    // Création du produit
-	const produit = new ProduitPanier(produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor);
-	produit['quantity'] = selectedQuantity;
+    if (produit === "undefined") {
+        // Création du produit
+        produit = new ProduitPanier(produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor, selectedQuantity);
+        // Recherche dans le tableau panier
+    }     
     
     // Alerte si absence de quantité
-	// if (selectedQuantity == 0) {
-	//   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1")
-	// }
-
-	// Recherche dans le tableau panier
-	if (panier.find((produitActuel) => produitActuel._id == produit._id) && panier.find((produitActuel) => produitActuel.color == produit.color)) {
-		produit.ajoutQuantity(selectedQuantity);
-		console.log(produit)
-	} else {
-		produit.quantity = selectedQuantity;
-		produit.ajoutProduit();
-		console.log(produit)
-	}
-	console.log(panier)
+    // if (selectedQuantity == 0) {
+    //   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1")
+    // }
+    
+    ajoutProduit(produitActuel, produit)
 }
 
-
 class ProduitPanier {
-	constructor(_id, imageUrl, altTxt, name, price, description, color, quantity) {
-		this._id = _id;
-		this.imageUrl = imageUrl;
-		this.altTxt = altTxt;
-		this.price = price;
-		this.name = name;
-		this.description = description;
-		this.color = color;
-	}
-	ajoutProduit() {
-		panier.push(this);
-	}
-	enleverProduit() {
-		panier.pop(this);
-	}
-	ajoutQuantity(selectedQuantity) {
-	console.log(selectedQuantity)
-	this.quantity += 10;
-	console.log(this.quantity)
-	}
+    constructor(_id, imageUrl, altTxt, name, price, description, color, quantity) {
+        this._id = _id;
+        this.imageUrl = imageUrl;
+        this.altTxt = altTxt;
+        this.price = price;
+        this.name = name;
+        this.description = description;
+        this.color = color;
+        this.quantity = quantity
+    }
+    ajoutProduit(produitActuel, produit) {
+        if (panier.find((produitActuel) => produitActuel._id === produit._id) && panier.find((produitActuel) => produitActuel.color === produit.color)) {
+        // Modification de la quantité
+        console.log("Ancienne q : " + produit.quantity);
+       produit.quantity += selectedQuantity;
+       console.log("Nouvelle q : " + produit.quantity);
+	} else {
+       console.log("Quantité nv produit : " + produitActuel)
+        console.log(produit);
+    }
+        panier.push(this);
+    }
+    enleverProduit() {
+        panier.pop(this);
+    }
+    ajoutQuantity(selectedQuantity) {
+        console.log("Quantité avant : " + this.quantity);
+        this.quantity += 1111;
+        console.log("Quantité ajoutée : " + this.quantity);
+    }
 }
 
 export {
-	eventsListeners
+    eventsListeners
 };
 
-/*/ LE PANIER
+/* LE PANIER
 let panier = [];
 
  */
