@@ -1,4 +1,4 @@
-// Création d'un bloc HTML complet par canapé dans l'API
+// Création d'un bloc HTML complet par canapé depuis l'API
 function importPageAccueil(data, html) {
     for (let kanap of data) {
         html += ` <a href="./product.html?id=${kanap._id}">

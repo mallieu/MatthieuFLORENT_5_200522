@@ -1,154 +1,99 @@
-import {
-	storageKanap,
-	urlParams
-} from "./product.js";
 
-const panier = [];
+// Faire comme kanap ID, mais à partir du local storage
+// const items = { ...localStorage };
 
-async function eventsListeners() {
+// console.log('avant')
+// console.log(items)
+// console.log(localStorage)
+
+
+
+
+
+
 	// Ajout panier
-	const addToCart = document.querySelector("#addToCart");
-	addToCart.addEventListener("click", ajoutProduit);
-}
-
-function ajoutProduit() {
-	// Récupération des attributs
-	const produitActuel = storageKanap.filter((produitActuel) => produitActuel._id === urlParams.get("id"));
-	const selectedQuantity = Number(document.getElementById("quantity").value); 
-	const selectedColor = document.querySelector("#colors").value;  
-
-    // Création du produit
-	// if (typeof produit === "undefined") { TEST A REVOIR
-	const produit = new ProduitPanier(produitActuel[0]._id, produitActuel[0].imageUrl, produitActuel[0].altTxt, produitActuel[0].name, produitActuel[0].price, produitActuel[0].description, selectedColor);
-	produit.traitementProduit(produit, selectedQuantity)    
-	
-	// Alerte si absence de quantité
-	// if (selectedQuantity == 0) {
-	//   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1")
-	// }
-
-	// Recherche dans le tableau panier
-	console.log(panier)
-}
-
-
-class ProduitPanier {
-	constructor(_id, imageUrl, altTxt, name, price, description, color) {
-		this._id = _id;
-		this.imageUrl = imageUrl;
-		this.altTxt = altTxt;
-		this.price = price;
-		this.name = name;
-		this.description = description;
-		this.color = color;
-	}
-	ajoutPanier() {
-		panier.push(this);
-	}
-	enleverPanier() {
-		panier.pop(this);
-	}
-	traitementProduit(produit, selectedQuantity) {
-		if (panier.find((produitActuel) => produitActuel._id === produit._id) && panier.find((produitActuel) => produitActuel.color === produit.color)) {
-			console.log("bis repetita")
-			console.log("Quantité avant ajout : " + produit.quantity)
-			produit['quantity'] = selectedQuantity + 2;
-			console.log("Quantité après ajout : " + produit.quantity)
-		} else {
-			produit['quantity'] = selectedQuantity;
-			console.log("premiere fois")
-			console.log("Quantité après ajout : " + produit.quantity)
-			produit.ajoutPanier(produit);
-		}
-	
-	}
-	// ajoutQuantity(selectedQuantity) {
-	// this.quantity += selectedQuantity;
-	// console.log("Quantité après ajout : " + this.quantity)
-	// }
-}
-
-export {
-	eventsListeners
-};
-
-/*/ LE PANIER
-let panier = [];
-
- */
-
-/*
-const newAccount = new BankAccount("Will Alexander", 500);
-
-newAccount.showBalance(); // imprime "Solde: 500 EUR" à la console
+	const testbouton = document.querySelector(".cart__order__form__submit");
+	testbouton.addEventListener("click", testtt);    
+    let parseLocalStorage = JSON.parse(localStorage.getItem('kanaps'));
+    console.log("Lecture parse")
+    console.log(parseLocalStorage)
+    console.log("Lecture storage")
+    console.log(localStorage.getItem('kanaps'))
 
 
 
-/*
- 
-ajoutPanier() {
-    console.log("+1")
-};
-retraitPanier() {
-    console.log("-1")
-};
-    
-    kanap.imageUrl
-    kanap.altTxt
-    kanap.name
-    kanap.price
-    kanap.description
-    kanap.colors 
-}
 
-
-/* 
-function addProduct(){
-    if(localStorage.getItem('products')){
-        panier = JSON.parse(localStorage.getItem('products'));
+function testtt(test) {
+    for (let kanap of parseLocalStorage) {
+       console.log(kanap.color)
     }
-    panier.push({'productId' : productId + 1, image : '<imageLink>'});
-    localStorage.setItem('products', JSON.stringify(panier));
 }
 
 
 
-let gestionPanier = function () {
-// TROUVER L'ELEMENT DECLENCHEUR DES FONCTIONS
-
-    // Array en localStorage
-
-
-    // Créer l'item
-    let itemPanier = "a"
-
-    kanapId = 
-    kanapColor = 
-    KanapQuantity = 
+// console.log('après')
+// console.log(test)
+// console.log(localStorage)
 
 
-    // Ajouter un item
-    localStorage.setItem(itemPanier);
-    console.log(localStoragePanier)
-    
-    // Enlever un item
-    localStorage.removeItem('monChat');
+//Accéder au localstorage
+// Pour chaque produit, créer une ligne et faire apparaître les blocs en HTML
 
-
-    // Evaluer quantité et produits
-
-    // Rassembler items avec ID et couleurs pour ++ quantité (et pas uniquement au premier ajout)
-
-    // Retrait quantité
-
-    // Afficher le panier
-    // Un item
-    var cat = localStorage.getItem('monChat');
-
-    // Tous les items
-    for( let i = 0; i < localStorage.length; i++){
-        localStorage.key(i);
+// 1) Convertir 
+// 2) Lister 
+// 3) Insérer les blocs HTML 
+// Insertion d'un bloc HTML complet par canapé depuis le panier en localStorage
+function importPageAccueil(data, html) {
+    for (let products of localS) {
+        html += ` <a href="./product.html?id=${kanap._id}">
+              <article>
+                <img src="${kanap.imageUrl}" alt="${kanap.altTxt}">
+                <h3 class="productName">${kanap.name}</h3>
+                <p class="productDescription">${kanap.description}.</p>
+              </article>
+            </a> `;
     }
-
+    return html;
 }
+
+/*4) Faire la somme 
+
+5) Agir sur les items pour modifier le panier 
+6) Penser au passage à 0 qui supprime l'item 
+7) Transition avec le bouton pour passer commande
+
+            <section id="cart__items"> => Ajout après ça
+             <article class="cart__item" data-id="{product-ID}" data-color="{product-color}">
+                <div class="cart__item__img">
+                  <img src="../images/product01.jpg" alt="Photographie d'un canapé">
+                </div>
+                <div class="cart__item__content">
+                  <div class="cart__item__content__description">
+                    <h2>Nom du produit</h2>
+                    <p>Vert</p>
+                    <p>42,00 €</p>
+                  </div>
+                  <div class="cart__item__content__settings">
+                    <div class="cart__item__content__settings__quantity">
+                      <p>Qté : </p>
+                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
+                    </div>
+                    <div class="cart__item__content__settings__delete">
+                      <p class="deleteItem">Supprimer</p>
+                    </div>
+                  </div>
+                </div>
+              </article>
+
+
+
+
+
+
+
+
+Pas de doublon 
 */
+
+/* Penser au total */
+

@@ -3,11 +3,11 @@ import {
 } from "./page_accueil.js"; 
 import { 
     ficheProduit, // Affichage fiche produit
-} from "./product.js"; 
+} from "./fiche_produit.js"; 
 
 import {
     eventsListeners // Activation déclencheurs
-} from "./cart.js"
+} from "./gestion_products.js"
 
 // URL de l'API
 const urlAPI = "http://localhost:3000/api/products";
@@ -48,7 +48,9 @@ const getProducts = async function() {
 
 async function insertionHTML(html) {
     sectionArticle.innerHTML = html;
+    if (window.location.href.indexOf("id") > -1) {
     eventsListeners()
+  }
 }   
 
 export { getProducts, insertionHTML }
