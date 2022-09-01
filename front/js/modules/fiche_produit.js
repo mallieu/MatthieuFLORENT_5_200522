@@ -2,7 +2,7 @@ import {
   insertionHTML
 } from "./api.js";
 
-let storageKanap = {};
+let storageKanap = [];
 
 // Recherche de l'ID dans l'URL
 const urlParams = new URLSearchParams(window.location.search);

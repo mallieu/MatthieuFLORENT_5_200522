@@ -3,7 +3,7 @@ import {
 	urlParams
 } from "./fiche_produit.js";
 
-let panier = [];
+const panier = [];
 
 async function eventsListeners() {
 	// Ajout panier
@@ -12,7 +12,6 @@ async function eventsListeners() {
 }
 
 function ajoutProduit() {
-	panier = JSON.parse(localStorage.getItem("Cart")) || []
 	// Récupération des attributs
 	const produitActuel = storageKanap.filter((produitActuel) => produitActuel._id === urlParams.get("id"));
 	const selectedQuantity = Number(document.getElementById("quantity").value); 
@@ -30,10 +29,10 @@ function ajoutProduit() {
 	// Paramètre utilisé pour rechercher le produit dans le panier
 	const rechercheProduitPanier = panier.find((produitActuel) => produitActuel._id === produit._id) && panier.find((produitActuel) => produitActuel.color === produit.color);
 	
-	produit.traitementProduit(rechercheProduitPanier, selectedQuantity);    
+	produit.traitementProduit(rechercheProduitPanier, produit, selectedQuantity);    
 
 	// Modification du panier dans le local storage
-	storagePanier(panier);
+	storagePanier(panier, produitActuel);
 }
 
 
@@ -48,14 +47,14 @@ class ProduitPanier {
 		this.color = color;
 		this.quantity = 0
 	}
-	traitementProduit(rechercheProduitPanier, selectedQuantity) {
+	traitementProduit(rechercheProduitPanier, produit, selectedQuantity) {
 		// Identifie le produit et modifie sa quantité
-		if (rechercheProduitPanier) {
+		if (panier.find((produitActuel) => produitActuel._id === produit._id) && panier.find((produitActuel) => produitActuel.color === produit.color)) {
 			rechercheProduitPanier.quantity += selectedQuantity;
 		} else {
 		// Ajout du produit au panier s'il n'existe pas encore
-			this.quantity = selectedQuantity;
-			this.ajoutPanier(); 
+			produit.quantity = selectedQuantity;
+			produit.ajoutPanier(); 
 		}
 	}
 	ajoutPanier() {
@@ -66,11 +65,24 @@ class ProduitPanier {
 	}
 };
 
-async function storagePanier(panier) {
-	localStorage.setItem("Cart", JSON.stringify(panier)); 
+async function storagePanier() {
+	// Conversion du array panier en string puis ajout au local storage
+	localStorage.setItem("kanaps", JSON.stringify(panier)); 
+	const othersStoragedProducts = firstStoragedProducts ? firstStoragedProducts + panier : firstStoragedProducts
+	console.log(firstStoragedProducts)
+	console.log(othersStoragedProducts)
+	// Conversion des strings produits en array panier
+	// JSON.parse(localStorage.getItem('products'));
+
+	// IL FAUT L'INTÉRIEUR DU PANIER
 }; 
 
 export {
 	eventsListeners
 };
 
+
+// SI panier modifié, alors storage aussi
+
+
+// Pour la récupération get puis parse 
