@@ -1,6 +1,4 @@
-import {
-  insertionHTML
-} from "./api.js";
+import { insertionHTML } from "./api.js";
 
 let storageKanap = [];
 
@@ -13,13 +11,13 @@ function ficheProduit(data, html) {
 
   // Création de l'item Kanap à partir de data
   for (let kanap of data) {
-      Object.entries(kanap).forEach(kanap => kanap);
-      // Génération du produit selon son ID
-      if (kanap._id === urlParams.get("id")) {
-          html = generationFiche(html, kanap); // Création du bloc
-          sectionCouleurs(html, kanap); // Ajout des couleurs
-          return html;
-          // AJOUTER TEST GENERATION SI HTML VIDE
+    Object.entries(kanap).forEach((kanap) => kanap);
+    // Génération du produit selon son ID
+    if (kanap._id === urlParams.get("id")) {
+      html = generationFiche(html, kanap); // Création du bloc
+      sectionCouleurs(html, kanap); // Ajout des couleurs
+      return html;
+      // AJOUTER TEST GENERATION SI HTML VIDE
     }
   }
 }
@@ -66,13 +64,12 @@ car elle a besoin que le html soit effectivement sur la page */
 async function sectionCouleurs(html, kanap) {
   await insertionHTML(html);
   // Récupère la couleur à partir du canapé généré par l'API
-  kanap.colors.forEach(kanapColor => html +=`
-<option value="${kanapColor}">${kanapColor}</option>`);
+  kanap.colors.forEach(
+    (kanapColor) =>
+      (html += `
+<option value="${kanapColor}">${kanapColor}</option>`)
+  );
   document.querySelector("#colors").innerHTML = html; // Insertion HTML pour chaque couleur;
 }
 
-export {
-  ficheProduit,
-  urlParams,
-  storageKanap
-};
+export { ficheProduit, urlParams, storageKanap };
