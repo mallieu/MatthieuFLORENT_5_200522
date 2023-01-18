@@ -26,10 +26,10 @@ const donneesFormulaire = {
   },
 };
 
+
 const boutonCommander = document.getElementById("order");
 
 affichagePanier();
-interactionPanier();
 configurationFormulaire();
 
 // Fonction pour générer un bloc HTML par produit
@@ -68,40 +68,45 @@ function affichagePanier() {
       </article>`;
       sectionProduitsPanier.innerHTML = html;
     });
-    interactionPanier();
+    interactionProduitPanier();
     calculPrixTotal();
     calculQuantiteTotal();
   }
 }
 
 // Ajout des triggers sur chaque produit
-function interactionPanier() {
-  document.querySelectorAll(".deleteItem").forEach((settingTrigger) => {
-    settingTrigger.addEventListener("click", suppressionProduitPanier);
+function interactionProduitPanier() {
+  document.querySelectorAll(".deleteItem").forEach((configurationTrigger) => {
+    configurationTrigger.addEventListener("click", suppressionProduitPanier(selectionProduitPanier));
   });
-  document.querySelectorAll(".itemQuantity").forEach((settingTrigger) => {
-    settingTrigger.addEventListener("input", gestionQuantiteProduit);
+  document.querySelectorAll(".itemQuantity").forEach((configurationTrigger) => {
+    configurationTrigger.addEventListener("input", selectionProduitPanier(modificationProduitPanier));
   });
+  
+}
+
+function selectionProduitPanier(trigger) {
+      // Récupération de la quantité du produit
+      const clickedInput = trigger.target.closest(".itemQuantity");
+      const produitClique = trigger.target.closest(".cart__item");
+    
+      // Récupération des attributs pour modifications du panier
+      const produitPanierId = produitClique.dataset.id;
+      const produitPanierColor = produitClique.dataset.color;
+    
+      // Correspondance du produit de la page avec le produit du panier
+      let thisKanap =
+        panier.find((ProduitPanier) => ProduitPanier._id === produitPanierId) &&
+        panier.find((ProduitPanier) => ProduitPanier.color === produitPanierColor);
+    
+      // Récupère l'index du produit
+      let indexProduit = panier.indexOf(thisKanap);
+      return clickedInput/indexProduit/thisKanap
 }
 
 // Suppression panier
-function suppressionProduitPanier(trigger) {
-  // Isolement du bloc HTML du produit à partir du bouton cliqué
-  const clickedProduct = trigger.target.closest(".cart__item");
-
-  // Récupération des attributs pour modifications du panier
-  const produitPanierId = clickedProduct.dataset.id;
-  const produitPanierColor = clickedProduct.dataset.color;
-
-  // Correspondance du produit de la page avec le produit du panier
-  let thisKanap =
-    panier.find((ProduitPanier) => ProduitPanier._id === produitPanierId) &&
-    panier.find((ProduitPanier) => ProduitPanier.color === produitPanierColor);
-
-  // Récupère l'index du produit
-  let indexProduit = panier.indexOf(thisKanap);
-
-  // Supprime le produit
+function suppressionProduitPanier(indexProduit) {
+    // Supprime le produit
   panier.splice(indexProduit, 1);
 
   // Met à jour le nouveau panier
@@ -109,44 +114,10 @@ function suppressionProduitPanier(trigger) {
 
   // Réactualise les produits affichés
   affichagePanier();
-  calculPrixTotal();
-  calculQuantiteTotal();
 }
 
-// Ajout quantité totale
-function calculPrixTotal() {
+function modificationProduitPanier(thisKanap, clickedInput) {
   panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
-  const prixTotal = panier.reduce((accumulator, produitsPanier) => {
-    return accumulator + produitsPanier.price * produitsPanier.quantity;
-  }, 0);
-  const emplacementPrix = document.getElementById("totalPrice");
-  emplacementPrix.innerHTML = prixTotal;
-}
-
-function calculQuantiteTotal() {
-  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
-  const quantiteTotale = panier.reduce((accumulator, produitsPanier) => {
-    return accumulator + +produitsPanier.quantity;
-  }, 0);
-  const emplacementQuantite = document.getElementById("totalQuantity");
-  emplacementQuantite.innerHTML = quantiteTotale;
-}
-
-function gestionQuantiteProduit(trigger) {
-  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
-
-  // Récupération de la quantité du produit
-  const clickedInput = trigger.target.closest(".itemQuantity");
-  const clickedProduct = trigger.target.closest(".cart__item");
-
-  // Récupération des attributs pour modifications du panier
-  const produitPanierId = clickedProduct.dataset.id;
-  const produitPanierColor = clickedProduct.dataset.color;
-
-  // Correspondance du produit de la page avec le produit du panier
-  let thisKanap =
-    panier.find((ProduitPanier) => ProduitPanier._id === produitPanierId) &&
-    panier.find((ProduitPanier) => ProduitPanier.color === produitPanierColor);
 
   // Changement de la quantité
   thisKanap.quantity = clickedInput.value;
@@ -157,6 +128,28 @@ function gestionQuantiteProduit(trigger) {
   // Réactualise les produits affichés
   affichagePanier();
 }
+
+// Calcul prix total
+function calculPrixTotal() {
+  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
+  const prixTotal = panier.reduce((accumulator, produitsPanier) => {
+    return accumulator + produitsPanier.price * produitsPanier.quantity;
+  }, 0);
+  const emplacementPrixTotal = document.getElementById("totalPrice");
+  emplacementPrixTotal.innerHTML = prixTotal;
+}
+
+// Calcul quantité totale
+function calculQuantiteTotal() {
+  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
+  const quantiteTotale = panier.reduce((accumulator, produitsPanier) => {
+    return accumulator + +produitsPanier.quantity;
+  }, 0);
+  const emplacementQuantiteTotale = document.getElementById("totalQuantity");
+  emplacementQuantiteTotale.innerHTML = quantiteTotale;
+}
+
+
 
 function configurationFormulaire() {
   erreursFormulaire();

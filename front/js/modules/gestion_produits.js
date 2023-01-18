@@ -20,7 +20,7 @@ function ajoutProduit() {
   // Alerte si absence de quantité
   if (selectedQuantity === 0) {
   alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1");
-  }
+  } else {
 
   // Création du produit (quantité par défaut à 0)
   const produit = new ProduitPanier(
@@ -42,7 +42,7 @@ function ajoutProduit() {
 
   // Modification du panier dans le local storage
   storagePanier(panier);
-}
+}}
 
 class ProduitPanier {
   constructor(_id, imageUrl, altTxt, name, price, description, color) {
@@ -67,9 +67,6 @@ class ProduitPanier {
   }
   ajoutPanier() {
     panier.push(this);
-  }
-  enleverPanier() {
-    panier.pop(this);
   }
 }
 
