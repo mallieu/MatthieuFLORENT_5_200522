@@ -54,4 +54,7 @@ async function insertionHTML(html) {
   }
 }
 
-export { recuperationProduitsAPI, insertionHTML };
+// const data = fetch(urlAPI).then(value => value.json());
+
+
+export { recuperationProduitsAPI, insertionHTML, urlAPI };

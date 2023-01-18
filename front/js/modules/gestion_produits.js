@@ -1,6 +1,17 @@
-import { storageKanap, urlParams } from "./fiche_produit.js";
+import { urlParams } from "./fiche_produit.js";
+
+
 
 let panier = [];
+
+const urlAPI = "http://localhost:3000/api/products";
+
+
+const recuperationProduitsAPI2 = async function () {
+  // Appel de l'API
+  let data = fetch(urlAPI)
+    .then((result) => result.json())
+    .then((data))}
 
 async function eventsListeners() {
   // Ajout panier
@@ -9,9 +20,10 @@ async function eventsListeners() {
 }
 
 function ajoutProduit() {
+  recuperationProduitsAPI2()
   panier = JSON.parse(localStorage.getItem("Cart")) || [];
   // Récupération des attributs
-  const produitActuel = storageKanap.filter(
+  const produitActuel = data.filter(
     (produitActuel) => produitActuel._id === urlParams.get("id")
   );
   const selectedQuantity = Number(document.getElementById("quantity").value);
