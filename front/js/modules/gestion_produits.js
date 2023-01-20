@@ -1,17 +1,23 @@
-import { urlParams } from "./fiche_produit.js";
-
-
+import { variablesGlobales } from "./variables.js";
 
 let panier = [];
 
-const urlAPI = "http://localhost:3000/api/products";
-
-
-const recuperationProduitsAPI2 = async function () {
+const appelAPI =
   // Appel de l'API
-  let data = fetch(urlAPI)
+  fetch(variablesGlobales.urlAPI)
     .then((result) => result.json())
-    .then((data))}
+    .then((data) => {
+      return data;
+    });
+
+
+const rechercheProduit = async () => {
+  const a = await appelAPI;
+  const b = a.find(
+    (produitActuel) => produitActuel._id ===  new URLSearchParams(window.location.search).get("id")
+  );
+  return b
+};
 
 async function eventsListeners() {
   // Ajout panier
@@ -19,51 +25,36 @@ async function eventsListeners() {
   addToCart.addEventListener("click", ajoutProduit);
 }
 
-function ajoutProduit() {
-  recuperationProduitsAPI2()
+async function ajoutProduit() {
   panier = JSON.parse(localStorage.getItem("Cart")) || [];
-  // Récupération des attributs
-  const produitActuel = data.filter(
-    (produitActuel) => produitActuel._id === urlParams.get("id")
-  );
   const selectedQuantity = Number(document.getElementById("quantity").value);
   const selectedColor = document.querySelector("#colors").value;
-
+  const produitActuel = await rechercheProduit().then((res)=> res);
   // Alerte si absence de quantité
   if (selectedQuantity === 0) {
-  alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1");
+    alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1");
   } else {
+    // Création du produit (quantité par défaut à 0)
+    const produit = new ProduitPanier(
+      produitActuel._id,
+      selectedColor
+    );
 
-  // Création du produit (quantité par défaut à 0)
-  const produit = new ProduitPanier(
-    produitActuel[0]._id,
-    produitActuel[0].imageUrl,
-    produitActuel[0].altTxt,
-    produitActuel[0].name,
-    produitActuel[0].price,
-    produitActuel[0].description,
-    selectedColor
-  );
+    // Paramètre utilisé pour vérifier l'existence du produit dans le panier
+    const rechercheProduitPanier =
+      panier.find((produitActuel) => produitActuel._id === produit._id) &&
+      panier.find((produitActuel) => produitActuel.color === produit.color);
 
-  // Paramètre utilisé pour rechercher le produit dans le panier
-  const rechercheProduitPanier =
-    panier.find((produitActuel) => produitActuel._id === produit._id) &&
-    panier.find((produitActuel) => produitActuel.color === produit.color);
+    produit.traitementProduit(rechercheProduitPanier, selectedQuantity);
 
-  produit.traitementProduit(rechercheProduitPanier, selectedQuantity);
-
-  // Modification du panier dans le local storage
-  storagePanier(panier);}
+    // Modification du panier dans le local storage
+    storagePanier(panier);
+  }
 }
 
 class ProduitPanier {
-  constructor(_id, imageUrl, altTxt, name, price, description, color) {
+  constructor(_id, color) {
     this._id = _id;
-    this.imageUrl = imageUrl;
-    this.altTxt = altTxt;
-    this.price = price;
-    this.name = name;
-    this.description = description;
     this.color = color;
     this.quantity = 0;
   }
