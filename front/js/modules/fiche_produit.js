@@ -1,5 +1,4 @@
 import { insertionHTML } from "./api.js";
-import { variablesGlobales } from "./variables.js";
 
 // Création d'un bloc HTML complet du canapé selon son ID
 function ficheProduit(data, html) {
@@ -7,7 +6,7 @@ function ficheProduit(data, html) {
   for (let kanap of data) {
     Object.entries(kanap).forEach((kanap) => kanap);
     // Génération du produit selon son ID
-    if (kanap._id === variablesGlobales.urlParams.get("id")) {
+    if (kanap._id === new URLSearchParams(window.location.search).get("id")) {
       html = generationFiche(html, kanap); // Création du bloc
       sectionCouleurs(html, kanap); // Ajout des couleurs
       return html;

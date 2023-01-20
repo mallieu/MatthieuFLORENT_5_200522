@@ -1,10 +1,10 @@
-import { variablesGlobales } from "./variables.js";
+const urlAPI = "http://localhost:3000/api/products"
 
 let panier = [];
 
 const appelAPI =
   // Appel de l'API
-  fetch(variablesGlobales.urlAPI)
+  fetch(urlAPI)
     .then((result) => result.json())
     .then((data) => {
       return data;

@@ -1,49 +1,40 @@
-import { variablesGlobales } from "./variables.js";
+const urlAPI = "http://localhost:3000/api/products"
 
 const sectionProduitsPanier = document.getElementById("cart__items");
 
 let panier = [];
 
-// Identification des champs du formulaire
-const donneesFormulaire = {
-  firstName: {
-    selecteur: document.getElementById("firstName"),
-    validation: false,
-  },
-  lastName: {
-    selecteur: document.getElementById("lastName"),
-    validation: false,
-  },
-  address: {
-    selecteur: document.getElementById("address"),
-    validation: false,
-  },
-  city: {
-    selecteur: document.getElementById("city"),
-    validation: false,
-  },
-  email: {
-    selecteur: document.getElementById("email"),
-    validation: false,
-  }
-};
-
 const appelAPI =
   // Appel de l'API
-  fetch(variablesGlobales.urlAPI)
+  fetch(urlAPI)
     .then((result) => result.json())
     .then((data) => {
       return data;
     });
 
-// const rechercheProduit = async () => {
-//   const a = await appelAPI;
-//   const b = a.find(
-//     (produitActuel) => produitActuel._id ===  new URLSearchParams(window.location.search).get("id")
-//   );
-//   return b
-// };
-
+    // Identification des champs du formulaire
+const donneesFormulaire = {
+  firstName : {
+    selecteur: document.getElementById("firstName"),
+    validation: false,
+  },
+  lastName : {
+    selecteur: document.getElementById("lastName"),
+    validation: false,
+  },
+  address : {
+    selecteur: document.getElementById("address"),
+    validation: false,
+  },
+  city : {
+    selecteur: document.getElementById("city"),
+    validation: false,
+  },
+  email : {
+    selecteur: document.getElementById("email"),
+    validation: false,
+  }
+};
 
 
 const rechercheProduitAPI = async (produitsPanier) => {
@@ -51,8 +42,6 @@ const rechercheProduitAPI = async (produitsPanier) => {
   const b = a.find((produitActuel) => produitActuel._id === produitsPanier._id);
   return b
 };
-
-const boutonCommander = document.getElementById("order");
 
 affichagePanier();
 interactionPanier();
@@ -190,15 +179,19 @@ function gestionQuantiteProduit(trigger) {
   affichagePanier();
 }
 
+
+
+
 function configurationFormulaire() {
   erreursFormulaire();
+  const boutonCommander = document.getElementById("order");
   boutonCommander.addEventListener("click", envoiDonneesFormulaire);
-  Object.keys(donneesFormulaire).forEach((champsFormulaire) =>
+  Object.values(donneesFormulaire).forEach((champsFormulaire) =>
     gestionDonneesFormulaire(champsFormulaire)
   );
 
-  function gestionDonneesFormulaire() {
-    this.addEventListener("input", validationDonneesFormulaire);
+  function gestionDonneesFormulaire(champsFormulaire) {
+    champsFormulaire.selecteur.addEventListener("focus", validationDonneesFormulaire);
   }
 
   function validationDonneesFormulaire() {
@@ -215,7 +208,6 @@ function configurationFormulaire() {
         document.getElementById("firstNameErrorMsg").hidden = false;
       }
     }
-
     if (
       donneesFormulaire.lastName.selecteur.value.match(
         /[A-Za-zÀ-ÖØ-öø-ÿ'][\s\p{L}-]*$/g
@@ -229,7 +221,6 @@ function configurationFormulaire() {
         document.getElementById("lastNameErrorMsg").hidden = false;
       }
     }
-
     if (
       donneesFormulaire.address.selecteur.value.match(
         /[A-Za-zÀ-ÖØ-öø-ÿ0-9'][\s\p{L}-]*$/g
@@ -243,7 +234,6 @@ function configurationFormulaire() {
         document.getElementById("addressErrorMsg").hidden = false;
       }
     }
-
     if (
       donneesFormulaire.city.selecteur.value.match(
         /[A-Za-zÀ-ÖØ-öø-ÿ'][\s\p{L}-]*$/g
@@ -257,7 +247,6 @@ function configurationFormulaire() {
         document.getElementById("cityErrorMsg").hidden = false;
       }
     }
-
     if (
       donneesFormulaire.email.selecteur.value.match(
         /^([a-z0-9_.+-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/

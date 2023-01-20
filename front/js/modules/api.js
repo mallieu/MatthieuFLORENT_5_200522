@@ -8,16 +8,15 @@ import {
   eventsListeners, // Activation déclencheurs
 } from "./gestion_produits.js";
 
-import { variablesGlobales } from "./variables.js";
-
-
 // Déclaration de la section HTML qui accueillera les données
 let sectionArticle = "";
+
+const urlAPI = "http://localhost:3000/api/products"
 
 // Appel des données pour la génération des produits
 const recuperationProduitsAPI = async function () {
   // Appel de l'API
-  fetch(variablesGlobales.urlAPI)
+  fetch(urlAPI)
     .then((result) => result.json())
     .then((data) => {
       let html = ""; // Création d'une variable HTML de type string
