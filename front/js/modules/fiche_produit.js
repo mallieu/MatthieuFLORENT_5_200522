@@ -1,19 +1,13 @@
 import { insertionHTML } from "./api.js";
-
-let storageKanap = [];
-
-// Recherche de l'ID dans l'URL
-const urlParams = new URLSearchParams(window.location.search);
+import { variablesGlobales } from "./variables.js";
 
 // Création d'un bloc HTML complet du canapé selon son ID
 function ficheProduit(data, html) {
-  storageKanap = data; // Enregistrement des données de l'API
-
   // Création de l'item Kanap à partir de data
   for (let kanap of data) {
     Object.entries(kanap).forEach((kanap) => kanap);
     // Génération du produit selon son ID
-    if (kanap._id === urlParams.get("id")) {
+    if (kanap._id === variablesGlobales.urlParams.get("id")) {
       html = generationFiche(html, kanap); // Création du bloc
       sectionCouleurs(html, kanap); // Ajout des couleurs
       return html;
@@ -72,4 +66,5 @@ async function sectionCouleurs(html, kanap) {
   document.querySelector("#colors").innerHTML = html; // Insertion HTML pour chaque couleur;
 }
 
-export { ficheProduit, urlParams, storageKanap };
+
+export { ficheProduit };
