@@ -14,7 +14,7 @@ const appelAPI =
 const rechercheProduit = async () => {
   const a = await appelAPI;
   const b = a.find(
-    (produitActuel) => produitActuel._id ===  new URLSearchParams(window.location.search).get("id")
+    (produitActuel) => produitActuel._id === new URLSearchParams(window.location.search).get("id")
   );
   return b
 };
@@ -29,7 +29,7 @@ async function ajoutProduit() {
   panier = JSON.parse(localStorage.getItem("Cart")) || [];
   const selectedQuantity = Number(document.getElementById("quantity").value);
   const selectedColor = document.querySelector("#colors").value;
-  const produitActuel = await rechercheProduit().then((res)=> res);
+  const produitActuel = await rechercheProduit().then((res) => res);
   // Alerte si absence de quantité
   if (selectedQuantity === 0) {
     alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1");

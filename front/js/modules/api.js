@@ -4,7 +4,6 @@ import {
 import {
   ficheProduit, // Affichage fiche produit
 } from "./fiche_produit.js";
-
 import {
   eventsListeners, // Activation déclencheurs
 } from "./gestion_produits.js";
@@ -32,7 +31,7 @@ const recuperationProduitsAPI = async function () {
         sectionArticle = document.getElementsByClassName("item")[0];
         html = ficheProduit(data, html);
 
-      // Page accueil
+        // Page accueil
       } else {
         // Paramétrage de la section
         sectionArticle = document.getElementById("items");

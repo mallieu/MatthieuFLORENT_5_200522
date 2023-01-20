@@ -1,3 +1,5 @@
+import { variablesGlobales } from "./variables.js";
+
 const sectionProduitsPanier = document.getElementById("cart__items");
 
 let panier = [];
@@ -23,16 +25,42 @@ const donneesFormulaire = {
   email: {
     selecteur: document.getElementById("email"),
     validation: false,
-  },
+  }
+};
+
+const appelAPI =
+  // Appel de l'API
+  fetch(variablesGlobales.urlAPI)
+    .then((result) => result.json())
+    .then((data) => {
+      return data;
+    });
+
+// const rechercheProduit = async () => {
+//   const a = await appelAPI;
+//   const b = a.find(
+//     (produitActuel) => produitActuel._id ===  new URLSearchParams(window.location.search).get("id")
+//   );
+//   return b
+// };
+
+
+
+const rechercheProduitAPI = async (produitsPanier) => {
+  const a = await appelAPI;
+  const b = a.find((produitActuel) => produitActuel._id === produitsPanier._id);
+  return b
 };
 
 const boutonCommander = document.getElementById("order");
 
-affichageProduitPanier();
+affichagePanier();
+interactionPanier();
 configurationFormulaire();
 
 // Fonction pour générer un bloc HTML par produit
-function affichageProduitPanier() {
+// Fonction pour générer un bloc HTML par produit
+async function affichagePanier() {
   let html = "";
   panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
   if (panier.length === 0) {
@@ -41,86 +69,63 @@ function affichageProduitPanier() {
     sectionProduitsPanier.innerHTML = html;
     console.log("Le panier est vide. Merci d'ajouter un produit");
   } else {
-    panier.forEach((produitsPanier) => {
-      // Génération des produits à partir du panier
+    for (const produitsPanier of panier) {
+      let produitActuel = await rechercheProduitAPI(produitsPanier).then((res) => res);
+      // Génération des produits à partir du panier et de l'API
       html += `
-      <article class="cart__item" data-id="${produitsPanier._id}" data-color="${produitsPanier.color}">
-        <div class="cart__item__img">
-          <img src="${produitsPanier.imageUrl}" alt="${produitsPanier.altTxt}">
-        </div>
-        <div class="cart__item__content">
-          <div class="cart__item__content__description">
-            <h2>${produitsPanier.name}</h2>
-            <p>${produitsPanier.color}</p>
-            <p>${produitsPanier.price} €</p>
-          </div>
-          <div class="cart__item__content__settings">
-            <div class="cart__item__content__settings__quantity">
-              <p>Qté : </p>
-              <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${produitsPanier.quantity}>
-            </div>
-            <div class="cart__item__content__settings__delete">
-              <p class="deleteItem">Supprimer</p>
-            </div>
-          </div>
-        </div>
-      </article>`;
+<article class="cart__item" data-id="${produitsPanier._id}" data-color="${produitsPanier.color}">
+  <div class="cart__item__img">
+    <img src="${produitActuel.imageUrl}" alt="${produitActuel.altTxt}">
+  </div>
+  <div class="cart__item__content">
+    <div class="cart__item__content__description">
+      <h2>${produitActuel.name}</h2>
+      <p>${produitsPanier.color}</p>
+      <p>${produitActuel.price} €</p>
+    </div>
+    <div class="cart__item__content__settings">
+      <div class="cart__item__content__settings__quantity">
+        <p>Qté : </p>
+        <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value=${produitsPanier.quantity}>
+      </div>
+      <div class="cart__item__content__settings__delete">
+        <p class="deleteItem">Supprimer</p>
+      </div>
+    </div>
+  </div>
+</article>`;
       sectionProduitsPanier.innerHTML = html;
-    });
-    actualisationProduitPanier();
-    interactionProduitPanier()
+    };
+    interactionPanier();
+    calculPrixTotal();
+    calculQuantiteTotal();
   }
 }
 
+
 // Ajout des triggers sur chaque produit
-function interactionProduitPanier() {
-  console.log("coucou")
-  document.querySelectorAll(".deleteItem").forEach((configurationTrigger) => {
-    configurationTrigger.addEventListener("click", (trigger) => {
-      let produitChoisi = selectionProduitPanier(trigger);
-      suppressionProduitPanier(produitChoisi);
-    })
+function interactionPanier() {
+  document.querySelectorAll(".deleteItem").forEach((settingTrigger) => {
+    settingTrigger.addEventListener("click", suppressionProduitPanier);
   });
-  document.querySelectorAll(".itemQuantity").forEach((configurationTrigger) => {
-    configurationTrigger.addEventListener("input", (trigger) => {
-      let produitChoisi = selectionProduitPanier(trigger);
-      modificationProduitPanier(produitChoisi);
-    })
+  document.querySelectorAll(".itemQuantity").forEach((settingTrigger) => {
+    settingTrigger.addEventListener("input", gestionQuantiteProduit);
   });
-}
-
-function selectionProduitPanier(trigger) {
-  // Récupération des principaux attributs du produit cible
-  let selectionProduit = trigger.target.closest(".cart__item"),
-    quantiteProduit = trigger.target.closest(".itemQuantity"),
-    idProduit = selectionProduit.dataset.id,
-    couleurProduit = selectionProduit.dataset.color;
-  return { idProduit, couleurProduit, quantiteProduit };
-}
-
-function modificationProduitPanier(produitChoisi) {
-  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
-  // Correspondance du produit de la page avec le produit en storage
-  let thisKanap =
-    panier.find((ProduitPanier) => ProduitPanier._id === produitChoisi.idProduit) &&
-    panier.find((ProduitPanier) => ProduitPanier.color === produitChoisi.couleurProduit);
-
-  // Changement de la quantité
-  thisKanap.quantity = produitChoisi.quantiteProduit.value;
-
-  // Met à jour le nouveau panier
-  localStorage.setItem("Cart", JSON.stringify(panier));
-  // Réactualise les produits affichés
-  affichageProduitPanier();
 }
 
 // Suppression panier
-function suppressionProduitPanier(produitChoisi) {
-  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
-  // Correspondance du produit de la page avec le produit en storage
+function suppressionProduitPanier(trigger) {
+  // Isolement du bloc HTML du produit à partir du bouton cliqué
+  const clickedProduct = trigger.target.closest(".cart__item");
+
+  // Récupération des attributs pour modifications du panier
+  const produitPanierId = clickedProduct.dataset.id;
+  const produitPanierColor = clickedProduct.dataset.color;
+
+  // Correspondance du produit de la page avec le produit du panier
   let thisKanap =
-    panier.find((ProduitPanier) => ProduitPanier._id === produitChoisi.idProduit) &&
-    panier.find((ProduitPanier) => ProduitPanier.color === produitChoisi.couleurProduit);
+    panier.find((ProduitPanier) => ProduitPanier._id === produitPanierId) &&
+    panier.find((ProduitPanier) => ProduitPanier.color === produitPanierColor);
 
   // Récupère l'index du produit
   let indexProduit = panier.indexOf(thisKanap);
@@ -132,36 +137,58 @@ function suppressionProduitPanier(produitChoisi) {
   localStorage.setItem("Cart", JSON.stringify(panier));
 
   // Réactualise les produits affichés
-  affichageProduitPanier();
-}
-
-function actualisationProduitPanier() {
-  console.log("actu")
-  // Calcul prix total
-  function calculPrixTotal() {
-    panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
-    const prixTotal = panier.reduce((accumulator, produitsPanier) => {
-      return accumulator + produitsPanier.price * produitsPanier.quantity;
-    }, 0);
-    const emplacementPrixTotal = document.getElementById("totalPrice");
-    emplacementPrixTotal.innerHTML = prixTotal;
-  }
-
-  // Calcul quantité totale
-  function calculQuantiteTotal() {
-    panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
-    const quantiteTotale = panier.reduce((accumulator, produitsPanier) => {
-      return accumulator + +produitsPanier.quantity;
-    }, 0);
-    const emplacementQuantiteTotale = document.getElementById("totalQuantity");
-    emplacementQuantiteTotale.innerHTML = quantiteTotale;
-  }
+  affichagePanier();
   calculPrixTotal();
   calculQuantiteTotal();
 }
 
+// Ajout quantité totale
+async function calculPrixTotal() {
+  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
+  for (const produitsPanier of panier) {
+    let produitActuel = await rechercheProduitAPI(produitsPanier).then((res) => res);
+    const prixTotal = panier.reduce((accumulator, produitsPanier) => {
+      return accumulator + produitActuel.price * produitsPanier.quantity;
+    }, 0);
+    const emplacementPrix = document.getElementById("totalPrice");
+    emplacementPrix.innerHTML = prixTotal;
+  }
+}
 
+function calculQuantiteTotal() {
+  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
+  const quantiteTotale = panier.reduce((accumulator, produitsPanier) => {
+    return accumulator + +produitsPanier.quantity;
+  }, 0);
+  const emplacementQuantite = document.getElementById("totalQuantity");
+  emplacementQuantite.innerHTML = quantiteTotale;
+}
 
+function gestionQuantiteProduit(trigger) {
+  panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
+
+  // Récupération de la quantité du produit
+  const clickedInput = trigger.target.closest(".itemQuantity");
+  const clickedProduct = trigger.target.closest(".cart__item");
+
+  // Récupération des attributs pour modifications du panier
+  const produitPanierId = clickedProduct.dataset.id;
+  const produitPanierColor = clickedProduct.dataset.color;
+
+  // Correspondance du produit de la page avec le produit du panier
+  let thisKanap =
+    panier.find((ProduitPanier) => ProduitPanier._id === produitPanierId) &&
+    panier.find((ProduitPanier) => ProduitPanier.color === produitPanierColor);
+
+  // Changement de la quantité
+  thisKanap.quantity = clickedInput.value;
+
+  // Met à jour le nouveau panier
+  localStorage.setItem("Cart", JSON.stringify(panier));
+
+  // Réactualise les produits affichés
+  affichagePanier();
+}
 
 function configurationFormulaire() {
   erreursFormulaire();

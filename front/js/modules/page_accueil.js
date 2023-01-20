@@ -11,5 +11,5 @@ function importPageAccueil(data, html) {
   }
   return html;
 }
-  
+
 export { importPageAccueil };
