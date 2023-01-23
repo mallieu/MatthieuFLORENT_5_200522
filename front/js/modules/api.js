@@ -5,13 +5,11 @@ import {
   ficheProduit, // Affichage fiche produit
 } from "./fiche_produit.js";
 import {
-  eventsListeners, // Activation déclencheurs
+  eventsListeners, urlAPI // Activation déclencheurs
 } from "./gestion_produits.js";
 
 // Déclaration de la section HTML qui accueillera les données
 let sectionArticle = "";
-
-const urlAPI = "http://localhost:3000/api/products"
 
 // Appel des données pour la génération des produits
 const recuperationProduitsAPI = async function () {

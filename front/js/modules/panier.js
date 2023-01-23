@@ -1,8 +1,9 @@
-const urlAPI = "http://localhost:3000/api/products"
-
 const sectionProduitsPanier = document.getElementById("cart__items");
 
 let panier = [];
+
+const urlAPI = "http://localhost:3000/api/products";
+
 
 const appelAPI =
   // Appel de l'API
@@ -12,25 +13,25 @@ const appelAPI =
       return data;
     });
 
-    // Identification des champs du formulaire
+// Identification des champs du formulaire
 const donneesFormulaire = {
-  firstName : {
+  firstName: {
     selecteur: document.getElementById("firstName"),
     validation: false,
   },
-  lastName : {
+  lastName: {
     selecteur: document.getElementById("lastName"),
     validation: false,
   },
-  address : {
+  address: {
     selecteur: document.getElementById("address"),
     validation: false,
   },
-  city : {
+  city: {
     selecteur: document.getElementById("city"),
     validation: false,
   },
-  email : {
+  email: {
     selecteur: document.getElementById("email"),
     validation: false,
   }
@@ -181,85 +182,95 @@ function gestionQuantiteProduit(trigger) {
 
 
 
-
 function configurationFormulaire() {
   erreursFormulaire();
   const boutonCommander = document.getElementById("order");
   boutonCommander.addEventListener("click", envoiDonneesFormulaire);
-  Object.values(donneesFormulaire).forEach((champsFormulaire) =>
-    gestionDonneesFormulaire(champsFormulaire)
-  );
+  Object.values(donneesFormulaire).forEach(function (champsFormulaire) {
+    champsFormulaire.selecteur.addEventListener("input", verificationChampsFormulaire);
+  })
 
-  function gestionDonneesFormulaire(champsFormulaire) {
-    champsFormulaire.selecteur.addEventListener("focus", validationDonneesFormulaire);
-  }
 
-  function validationDonneesFormulaire() {
-    if (
-      donneesFormulaire.firstName.selecteur.value.match(
-        /[A-Za-zÀ-ÖØ-öø-ÿ'][\s\p{L}-]*$/g
-      )
-    ) {
-      donneesFormulaire.firstName.validation = true;
-      document.getElementById("firstNameErrorMsg").hidden = true;
-    } else {
-      if (donneesFormulaire.firstName.selecteur.value.length > 1) {
+  function verificationChampsFormulaire(champsFormulaire) {
+    // Configuration des regex de validation
+    const regexTexte = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
+    const regexTexteEtNumero = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
+    const regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    /* Vérification des champs selon regex */
+    if (donneesFormulaire.firstName) {
+      if (regexTexte.test(donneesFormulaire.firstName.selecteur.value) && donneesFormulaire.firstName.selecteur.value.length > 1) {
+        donneesFormulaire.firstName.validation = true;
+      } else {
         donneesFormulaire.firstName.validation = false;
-        document.getElementById("firstNameErrorMsg").hidden = false;
       }
     }
-    if (
-      donneesFormulaire.lastName.selecteur.value.match(
-        /[A-Za-zÀ-ÖØ-öø-ÿ'][\s\p{L}-]*$/g
-      )
-    ) {
-      donneesFormulaire.lastName.validation = true;
-      document.getElementById("lastNameErrorMsg").hidden = true;
-    } else {
-      if (donneesFormulaire.lastName.selecteur.value.length > 1) {
+
+    // Nom
+    if (donneesFormulaire.lastName) {
+      if (regexTexte.test(donneesFormulaire.lastName.selecteur.value) && donneesFormulaire.lastName.selecteur.value.length > 1) {
+        donneesFormulaire.lastName.validation = true;
+      } else {
         donneesFormulaire.lastName.validation = false;
-        document.getElementById("lastNameErrorMsg").hidden = false;
       }
     }
-    if (
-      donneesFormulaire.address.selecteur.value.match(
-        /[A-Za-zÀ-ÖØ-öø-ÿ0-9'][\s\p{L}-]*$/g
-      )
-    ) {
-      donneesFormulaire.address.validation = true;
-      document.getElementById("addressErrorMsg").hidden = true;
-    } else {
-      if (donneesFormulaire.address.selecteur.value.length > 1) {
+    // Adresse
+    if (donneesFormulaire.address) {
+
+      if (regexTexteEtNumero.test(donneesFormulaire.address.selecteur.value) && donneesFormulaire.address.selecteur.value.length > 2) {
+        donneesFormulaire.address.validation = true;
+      } else {
         donneesFormulaire.address.validation = false;
-        document.getElementById("addressErrorMsg").hidden = false;
       }
     }
-    if (
-      donneesFormulaire.city.selecteur.value.match(
-        /[A-Za-zÀ-ÖØ-öø-ÿ'][\s\p{L}-]*$/g
-      )
-    ) {
-      donneesFormulaire.city.validation = true;
-      document.getElementById("cityErrorMsg").hidden = true;
-    } else {
-      if (donneesFormulaire.city.selecteur.value.length > 1) {
+    // Ville
+    if (donneesFormulaire.city) {
+
+      if (regexTexte.test(donneesFormulaire.city.selecteur.value) && donneesFormulaire.city.selecteur.value.length > 1) {
+        donneesFormulaire.city.validation = true;
+      } else {
         donneesFormulaire.city.validation = false;
-        document.getElementById("cityErrorMsg").hidden = false;
       }
     }
-    if (
-      donneesFormulaire.email.selecteur.value.match(
-        /^([a-z0-9_.+-]+)@([\da-z.-]+)\.([a-z.]{2,6})$/
-      )
-    ) {
-      donneesFormulaire.email.validation = true;
-      document.getElementById("emailErrorMsg").hidden = true;
-    } else {
-      if (donneesFormulaire.email.selecteur.value.length > 1) {
+    // Email
+    if (donneesFormulaire.email) {
+      if (regexMail.test(donneesFormulaire.email.selecteur.value) && donneesFormulaire.email.selecteur.value.length > 2) {
+        donneesFormulaire.email.validation = true;
+      } else {
         donneesFormulaire.email.validation = false;
-        document.getElementById("emailErrorMsg").hidden = false;
       }
     }
+
+    /* Affichage des messages d'erreurs selon l'état */
+    if (donneesFormulaire.firstName.validation === false && donneesFormulaire.firstName.selecteur.value.length > 2) {
+      document.getElementById("firstNameErrorMsg").hidden = false;
+    } else {
+      document.getElementById("firstNameErrorMsg").hidden = true;
+    }
+
+    if (donneesFormulaire.lastName.validation === false && donneesFormulaire.lastName.selecteur.value.length > 2) {
+      document.getElementById("lastNameErrorMsg").hidden = false;
+    } else {
+      document.getElementById("lastNameErrorMsg").hidden = true;
+    }
+
+    if (donneesFormulaire.address.validation === false && donneesFormulaire.address.selecteur.value.length > 2) {
+      document.getElementById("addressErrorMsg").hidden = false;
+    } else {
+      document.getElementById("addressErrorMsg").hidden = true;
+    }
+
+    if (donneesFormulaire.city.validation === false && donneesFormulaire.city.selecteur.value.length > 2) {
+      document.getElementById("cityErrorMsg").hidden = false;
+    } else {
+      document.getElementById("cityErrorMsg").hidden = true;
+    }
+
+    if (donneesFormulaire.email.validation === false && donneesFormulaire.email.selecteur.value.length > 2) {
+      document.getElementById("emailErrorMsg").hidden = false;
+    } else {
+      document.getElementById("emailErrorMsg").hidden = true;
+    }
+
   }
 }
 
@@ -279,14 +290,18 @@ function envoiDonneesFormulaire() {
       donneesFormulaire.city.selecteur.value
     );
     let products = panier.map((produit) => produit._id);
-    let commande = { contact, products }
-    console.log(commande)
+    let commande = {
+      contact,
+      products
+    };
     envoiCommandeAPI(commande);
+  } else {
+    alert('Les informations saisies semblent invalides ou incomplètes. Merci de les vérifier.')
   }
 }
 class creationContact {
   constructor(firstName, lastName, address, email, city) {
-    this.contact = {}
+    this.contact = {};
     this.firstName = firstName;
     this.lastName = lastName;
     this.address = address;
@@ -295,21 +310,28 @@ class creationContact {
   }
 }
 
-// function envoiCommandeAPI(commande) {
-//     let response = fetch("http://localhost:3000/api/products/order", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json;charset=utf-8",
-//       },
-//       body: JSON.stringify(commande),
-//     });
-//   }
+async function envoiCommandeAPI(commande) {
+  fetch("http://localhost:3000/api/products/order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json;charset=utf-8",
+    },
+    body: JSON.stringify(commande),
+  })
+    .then((response) => response.json())
+    .then((commande) => {
+      location.href = "./confirmation.html";
+      location.href.append(`${commande.orderId}`)
+
+    })
+    .catch((response) => {
+      console.error('Error:', response);
+    });
+}
 
 
-// obtenir code de la requête (201 => BIEN)
-
+// Permet de cacher les erreurs en attendant l'interaction de l'utilisateur
 function erreursFormulaire() {
-  // Permet de cacher les erreurs en attendant l'interaction de l'utilisateur
   document.getElementById("firstNameErrorMsg").hidden = true;
   document.getElementById("lastNameErrorMsg").hidden = true;
   document.getElementById("addressErrorMsg").hidden = true;
@@ -317,3 +339,4 @@ function erreursFormulaire() {
   document.getElementById("emailErrorMsg").hidden = true;
 }
 
+export { envoiCommandeAPI };
