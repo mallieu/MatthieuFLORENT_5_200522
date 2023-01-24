@@ -32,9 +32,12 @@ const donneesFormulaire = {
 
 
 const rechercheProduitAPI = async (produitsPanier) => {
-  const a = await appelAPI;
-  const b = a.find((produitActuel) => produitActuel._id === produitsPanier._id);
-  return b
+  try {
+    const a = await appelAPI;
+    const b = a.find((produitActuel) => produitActuel._id === produitsPanier._id);
+    return b
+  }
+  catch (err) { console.log(err) }
 };
 
 affichagePanier();
@@ -183,9 +186,10 @@ function configurationFormulaire() {
 
   function verificationChampsFormulaire() {
     // Configuration des regex de validation
-    const regexTexte = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
-    const regexTexteEtNumero = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
-    const regexMail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const regexTexte = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð '-]+$/u;
+    const regexTexteEtNumero = /^[0-9a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
+    const regexMail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+    
     /* Vérification des champs selon regex */
     if (donneesFormulaire.firstName) {
       if (regexTexte.test(donneesFormulaire.firstName.selecteur.value) && donneesFormulaire.firstName.selecteur.value.length > 1) {

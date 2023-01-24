@@ -15,9 +15,7 @@ const appelAPI =
     .then((data) => {
       return data;
     });
-
-    
-
+  
 // Déclaration de la section HTML qui accueillera les données
 let sectionArticle = "";
 
