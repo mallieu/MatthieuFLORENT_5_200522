@@ -2,11 +2,11 @@ import {
   importPageAccueil, // Affichage produit page accueil
 } from "./page_accueil.js";
 import {
-  ficheProduit, // Affichage fiche produit
-} from "./fiche_produit.js";
-import {
-  eventsListeners, urlAPI // Activation déclencheurs
-} from "./gestion_produits.js";
+  ficheProduit, ajoutProduit // Affichage fiche produit
+} from "./page_produit.js";
+
+const urlAPI = "http://localhost:3000/api/products"
+
 
 // Déclaration de la section HTML qui accueillera les données
 let sectionArticle = "";
@@ -46,7 +46,7 @@ const recuperationProduitsAPI = async function () {
 async function insertionHTML(html) {
   sectionArticle.innerHTML = html;
   if (window.location.href.indexOf("id") > -1) {
-    eventsListeners();
+    document.querySelector("#addToCart").addEventListener("click", ajoutProduit);
   }
 }
 

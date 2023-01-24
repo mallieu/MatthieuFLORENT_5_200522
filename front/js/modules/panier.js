@@ -1,3 +1,9 @@
+import { insertionId } from "./confirmation.js";
+
+affichagePanier();
+interactionPanier();
+configurationFormulaire();
+
 const sectionProduitsPanier = document.getElementById("cart__items");
 
 let panier = [];
@@ -44,9 +50,7 @@ const rechercheProduitAPI = async (produitsPanier) => {
   return b
 };
 
-affichagePanier();
-interactionPanier();
-configurationFormulaire();
+
 
 // Fonction pour générer un bloc HTML par produit
 // Fonction pour générer un bloc HTML par produit
@@ -117,13 +121,9 @@ function suppressionProduitPanier(trigger) {
     panier.find((ProduitPanier) => ProduitPanier._id === produitPanierId) &&
     panier.find((ProduitPanier) => ProduitPanier.color === produitPanierColor);
 
-  // Récupère l'index du produit
-  let indexProduit = panier.indexOf(thisKanap);
-
   // Supprime le produit
+  let indexProduit = panier.indexOf(thisKanap);
   panier.splice(indexProduit, 1);
-
-  // Met à jour le nouveau panier
   localStorage.setItem("Cart", JSON.stringify(panier));
 
   // Réactualise les produits affichés
@@ -320,9 +320,9 @@ async function envoiCommandeAPI(commande) {
   })
     .then((response) => response.json())
     .then((commande) => {
-      location.href = "./confirmation.html";
-      location.href.append(`${commande.orderId}`)
-
+      console.log(commande.orderId)
+      location.href = `./confirmation.html?${commande.orderId}`;
+      insertionId(commande)
     })
     .catch((response) => {
       console.error('Error:', response);
@@ -339,4 +339,3 @@ function erreursFormulaire() {
   document.getElementById("emailErrorMsg").hidden = true;
 }
 
-export { envoiCommandeAPI };

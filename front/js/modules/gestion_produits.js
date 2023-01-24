@@ -11,7 +11,7 @@ const appelAPI =
     });
 
 
-const rechercheProduitAPI = async () => {
+const produitCorrespondantAPI = async () => {
   const a = await appelAPI;
   const b = a.find(
     (produitActuel) => produitActuel._id === new URLSearchParams(window.location.search).get("id")
@@ -19,17 +19,11 @@ const rechercheProduitAPI = async () => {
   return b
 };
 
-async function eventsListeners() {
-  // Ajout panier
-  const addToCart = document.querySelector("#addToCart");
-  addToCart.addEventListener("click", ajoutProduit);
-}
-
 async function ajoutProduit() {
   panier = JSON.parse(localStorage.getItem("Cart")) || [];
   const quantiteProduit = Number(document.getElementById("quantity").value);
   const couleurProduit = document.querySelector("#colors").value;
-  const produitActuel = await rechercheProduitAPI().then((res) => res);
+  const produitActuel = await produitCorrespondantAPI().then((res) => res);
   // Alerte si absence de quantité
   if (quantiteProduit === 0) {
     alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1");
@@ -41,14 +35,14 @@ async function ajoutProduit() {
     );
 
     // Paramètre utilisé pour vérifier l'existence du produit dans le panier
-    const rechercheProduitPanier =
+    const produitCorrespondantPanier =
       panier.find((produitActuel) => produitActuel._id === produit._id) &&
       panier.find((produitActuel) => produitActuel.color === produit.color);
 
-    produit.traitementProduit(rechercheProduitPanier, quantiteProduit);
+    produit.changementQuantiteProduit(produitCorrespondantPanier, quantiteProduit);
 
     // Modification du panier dans le local storage
-    storagePanier(panier);
+    localStorage.setItem("Cart", JSON.stringify(panier));
   }
 }
 
@@ -58,23 +52,17 @@ class ProduitPanier {
     this.color = color;
     this.quantity = 0;
   }
-  traitementProduit(rechercheProduitPanier, quantiteProduit) {
-    // Identifie le produit et modifie sa quantité
-    if (rechercheProduitPanier) {
-      rechercheProduitPanier.quantity += quantiteProduit;
+  changementQuantiteProduit(produitCorrespondantPanier, quantiteProduit) {
+    // Identifie le produit actuel et modifie sa quantité
+    if (produitCorrespondantPanier) {
+      produitCorrespondantPanier.quantity += quantiteProduit;
     } else {
       // Ajout du produit au panier s'il n'existe pas encore
       this.quantity = quantiteProduit;
-      this.ajoutPanier();
+      this.ajoutProduitPanier();
     }
   }
-  ajoutPanier() {
+  ajoutProduitPanier() {
     panier.push(this);
   }
 }
-
-async function storagePanier(panier) {
-  localStorage.setItem("Cart", JSON.stringify(panier));
-}
-
-export { eventsListeners, urlAPI, appelAPI };
