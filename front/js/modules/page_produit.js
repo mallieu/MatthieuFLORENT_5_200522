@@ -19,7 +19,7 @@ const appelAPI =
 // Création d'un bloc HTML complet du canapé selon son ID
 function ficheProduit(data, html) {
   // Création de l'item Kanap à partir de data
-
+  try {
       for (let kanap of data) {
           Object.entries(kanap).forEach((kanap) => kanap);
           // Génération du produit selon son ID
@@ -29,9 +29,10 @@ function ficheProduit(data, html) {
               return html;
           }
       }
-  } 
-  
-
+  } catch (err) {
+      alert(err)
+  }
+}
 
 function generationFicheProduit(html, kanap) {
   // Pour faciliter la génération et la manipulation du produit
