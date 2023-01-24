@@ -1,23 +1,10 @@
 import { insertionId } from "./confirmation.js";
 
-affichagePanier();
-interactionPanier();
-configurationFormulaire();
-
-const sectionProduitsPanier = document.getElementById("cart__items");
+import {
+  appelAPI
+} from "./api.js";
 
 let panier = [];
-
-const urlAPI = "http://localhost:3000/api/products";
-
-
-const appelAPI =
-  // Appel de l'API
-  fetch(urlAPI)
-    .then((result) => result.json())
-    .then((data) => {
-      return data;
-    });
 
 // Identification des champs du formulaire
 const donneesFormulaire = {
@@ -50,12 +37,15 @@ const rechercheProduitAPI = async (produitsPanier) => {
   return b
 };
 
+affichagePanier();
+configurationFormulaire();
 
 
 // Fonction pour générer un bloc HTML par produit
 // Fonction pour générer un bloc HTML par produit
 async function affichagePanier() {
   let html = "";
+  const sectionProduitsPanier = document.getElementById("cart__items");
   panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
   if (panier.length === 0) {
     // Vérifie l"existence du panier
@@ -110,11 +100,11 @@ function interactionPanier() {
 // Suppression panier
 function suppressionProduitPanier(trigger) {
   // Isolement du bloc HTML du produit à partir du bouton cliqué
-  const clickedProduct = trigger.target.closest(".cart__item");
+  const produitClique = trigger.target.closest(".cart__item");
 
   // Récupération des attributs pour modifications du panier
-  const produitPanierId = clickedProduct.dataset.id;
-  const produitPanierColor = clickedProduct.dataset.color;
+  const produitPanierId = produitClique.dataset.id;
+  const produitPanierColor = produitClique.dataset.color;
 
   // Correspondance du produit de la page avec le produit du panier
   let thisKanap =
@@ -158,12 +148,12 @@ function gestionQuantiteProduit(trigger) {
   panier = JSON.parse(localStorage.getItem("Cart")) || []; // Récupération du panier
 
   // Récupération de la quantité du produit
-  const clickedInput = trigger.target.closest(".itemQuantity");
-  const clickedProduct = trigger.target.closest(".cart__item");
+  const produitInput = trigger.target.closest(".itemQuantity");
+  const produitClique = trigger.target.closest(".cart__item");
 
   // Récupération des attributs pour modifications du panier
-  const produitPanierId = clickedProduct.dataset.id;
-  const produitPanierColor = clickedProduct.dataset.color;
+  const produitPanierId = produitClique.dataset.id;
+  const produitPanierColor = produitClique.dataset.color;
 
   // Correspondance du produit de la page avec le produit du panier
   let thisKanap =
@@ -171,7 +161,7 @@ function gestionQuantiteProduit(trigger) {
     panier.find((ProduitPanier) => ProduitPanier.color === produitPanierColor);
 
   // Changement de la quantité
-  thisKanap.quantity = clickedInput.value;
+  thisKanap.quantity = produitInput.value;
 
   // Met à jour le nouveau panier
   localStorage.setItem("Cart", JSON.stringify(panier));
@@ -191,7 +181,7 @@ function configurationFormulaire() {
   })
 
 
-  function verificationChampsFormulaire(champsFormulaire) {
+  function verificationChampsFormulaire() {
     // Configuration des regex de validation
     const regexTexte = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
     const regexTexteEtNumero = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
@@ -204,8 +194,6 @@ function configurationFormulaire() {
         donneesFormulaire.firstName.validation = false;
       }
     }
-
-    // Nom
     if (donneesFormulaire.lastName) {
       if (regexTexte.test(donneesFormulaire.lastName.selecteur.value) && donneesFormulaire.lastName.selecteur.value.length > 1) {
         donneesFormulaire.lastName.validation = true;
@@ -213,7 +201,6 @@ function configurationFormulaire() {
         donneesFormulaire.lastName.validation = false;
       }
     }
-    // Adresse
     if (donneesFormulaire.address) {
 
       if (regexTexteEtNumero.test(donneesFormulaire.address.selecteur.value) && donneesFormulaire.address.selecteur.value.length > 2) {
@@ -222,7 +209,6 @@ function configurationFormulaire() {
         donneesFormulaire.address.validation = false;
       }
     }
-    // Ville
     if (donneesFormulaire.city) {
 
       if (regexTexte.test(donneesFormulaire.city.selecteur.value) && donneesFormulaire.city.selecteur.value.length > 1) {
@@ -231,7 +217,6 @@ function configurationFormulaire() {
         donneesFormulaire.city.validation = false;
       }
     }
-    // Email
     if (donneesFormulaire.email) {
       if (regexMail.test(donneesFormulaire.email.selecteur.value) && donneesFormulaire.email.selecteur.value.length > 2) {
         donneesFormulaire.email.validation = true;
@@ -320,9 +305,7 @@ async function envoiCommandeAPI(commande) {
   })
     .then((response) => response.json())
     .then((commande) => {
-      console.log(commande.orderId)
       location.href = `./confirmation.html?${commande.orderId}`;
-      insertionId(commande)
     })
     .catch((response) => {
       console.error('Error:', response);

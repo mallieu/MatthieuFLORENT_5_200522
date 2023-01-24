@@ -1,20 +1,8 @@
 import {
-  insertionHTML
+  insertionHTML, appelAPI
 } from "./api.js";
 
-
 let panier = [];
-
-const urlAPI = "http://localhost:3000/api/products"
-
-const appelAPI =
-  // Appel de l'API
-  fetch(urlAPI)
-    .then((result) => result.json())
-    .then((data) => {
-      return data;
-    });
-
 
 // Création d'un bloc HTML complet du canapé selon son ID
 function ficheProduit(data, html) {

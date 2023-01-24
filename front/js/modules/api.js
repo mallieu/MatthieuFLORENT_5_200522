@@ -5,11 +5,22 @@ import {
   ficheProduit, ajoutProduit // Affichage fiche produit
 } from "./page_produit.js";
 
+
 const urlAPI = "http://localhost:3000/api/products"
 
+const appelAPI =
+  // Appel de l'API
+  fetch(urlAPI)
+    .then((result) => result.json())
+    .then((data) => {
+      return data;
+    });
+
+    
 
 // Déclaration de la section HTML qui accueillera les données
 let sectionArticle = "";
+
 
 // Appel des données pour la génération des produits
 const recuperationProduitsAPI = async function () {
@@ -43,6 +54,7 @@ const recuperationProduitsAPI = async function () {
     });
 };
 
+
 async function insertionHTML(html) {
   sectionArticle.innerHTML = html;
   if (window.location.href.indexOf("id") > -1) {
@@ -50,4 +62,4 @@ async function insertionHTML(html) {
   }
 }
 
-export { recuperationProduitsAPI, insertionHTML };
+export { recuperationProduitsAPI, insertionHTML, appelAPI };
