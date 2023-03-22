@@ -8,17 +8,17 @@ let panier = [];
 function ficheProduit(data, html) {
   // Création de l'item Kanap à partir de data
   try {
-      for (let kanap of data) {
-          Object.entries(kanap).forEach((kanap) => kanap);
-          // Génération du produit selon son ID
-          if (kanap._id === new URLSearchParams(window.location.search).get("id")) {
-              html = generationFicheProduit(html, kanap); // Création du bloc
-              sectionCouleurs(html, kanap); // Ajout des couleurs
-              return html;
-          }
+    for (let kanap of data) {
+      Object.entries(kanap).forEach((kanap) => kanap);
+      // Génération du produit selon son ID
+      if (kanap._id === new URLSearchParams(window.location.search).get("id")) {
+        html = generationFicheProduit(html, kanap); // Création du bloc
+        sectionCouleurs(html, kanap); // Ajout des couleurs
+        return html;
       }
+    }
   } catch (err) {
-      alert(err)
+    alert(err)
   }
 }
 
@@ -49,6 +49,7 @@ function generationFicheProduit(html, kanap) {
              <label for="itemQuantity">Nombre d'article(s) (1-100) :</label>
              <input type="number" name="itemQuantity" min="1" max="100" value="0" id="quantity">
              </div>
+             <div id="quantity_error"></div>
            </div>
            <div class="item__content__addButton">
              <button id="addToCart">Ajouter au panier</button>
@@ -65,7 +66,7 @@ async function sectionCouleurs(html, kanap) {
   await insertionHTML(html);
   // Récupère la couleur à partir du canapé généré par l'API
   kanap.colors.forEach(
-      (kanapColor) =>
+    (kanapColor) =>
       (html += `<option value="${kanapColor}">${kanapColor}</option>`)
   );
   document.querySelector("#colors").innerHTML = html; // Insertion HTML pour chaque couleur;
@@ -102,13 +103,22 @@ class ProduitPanier {
 
 async function ajoutProduit() {
   panier = JSON.parse(localStorage.getItem("Cart")) || [];
-  const quantiteProduit = Number(document.getElementById("quantity").value);
+  let quantiteProduit = Number(document.getElementById("quantity").value);
   const couleurProduit = document.querySelector("#colors").value;
   const produitActuel = await produitCorrespondantAPI().then((res) => res);
   // Alerte si absence de quantité
   if (quantiteProduit === 0) {
-    alert("Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1");
-  } else {
+    document.getElementById("quantity_error").innerHTML = `<p><b>Pour ajouter ce produit au panier, merci d'indiquer une quantité minimum de 1</b></p>`
+  } else 
+  if (quantiteProduit > 100) {
+    document.getElementById("quantity").value = 100
+    document.getElementById("quantity_error").innerHTML = `<p><b>Pour ajouter ce produit au panier, merci d'indiquer une quantité maximum de 100</b></p>`
+  } else
+  if (quantiteProduit < 0) {
+    document.getElementById("quantity").value = 0
+    document.getElementById("quantity_error").innerHTML = `<p><b>Pour ajouter ce produit au panier, merci d'indiquer une quantité supérieur à 0</b></p>`
+  }
+  else {
     // Création du produit (quantité par défaut à 0)
     const produit = new ProduitPanier(
       produitActuel._id,

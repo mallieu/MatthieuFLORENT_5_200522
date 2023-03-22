@@ -1,5 +1,3 @@
-import { insertionId } from "./confirmation.js";
-
 import {
   appelAPI
 } from "./api.js";
@@ -82,7 +80,7 @@ async function affichagePanier() {
   </div>
 </article>`;
       sectionProduitsPanier.innerHTML = html;
-    };
+    }
     interactionPanier();
     calculPrixTotal();
     calculQuantiteTotal();
@@ -188,7 +186,7 @@ function configurationFormulaire() {
     // Configuration des regex de validation
     const regexTexte = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð '-]+$/u;
     const regexTexteEtNumero = /^[0-9a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
-    const regexMail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/g;
+    const regexMail = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/g;
     
     /* Vérification des champs selon regex */
     if (donneesFormulaire.firstName) {
@@ -285,7 +283,7 @@ function envoiDonneesFormulaire() {
     };
     envoiCommandeAPI(commande);
   } else {
-    alert('Les informations saisies semblent invalides ou incomplètes. Merci de les vérifier.')
+    document.getElementById("form_error").innerHTML =`<p><b>Les informations saisies semblent invalides ou incomplètes. Merci de les vérifier.</b></p>`
   }
 }
 class creationContact {
@@ -310,6 +308,8 @@ async function envoiCommandeAPI(commande) {
     .then((response) => response.json())
     .then((commande) => {
       location.href = `./confirmation.html?${commande.orderId}`;
+      panier = []
+      localStorage.setItem('Cart', JSON.stringify(panier));
     })
     .catch((response) => {
       console.error('Error:', response);

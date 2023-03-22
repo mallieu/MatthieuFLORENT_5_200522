@@ -3,6 +3,5 @@ async function insertionId() {
 }
 insertionId()
 
-export {insertionId}
 
 
